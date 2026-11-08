@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Truck, Globe, Heart, Phone, Mail, Lock } from 'lucide-react';
+import { ShieldCheck, Truck, Globe, Heart, Phone, Mail, Lock, Ruler } from 'lucide-react';
 
 const FacebookIcon = () => (
   <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -15,7 +15,7 @@ const InstagramIcon = () => (
   </svg>
 );
 
-export default function Footer({ onSelectCategory, onOpenAdmin, settings }) {
+export default function Footer({ onSelectCategory, onOpenAdmin, onOpenSizeGuide, settings }) {
   return (
     <footer className="bg-[#121212] text-[#FDFBF7] pt-16 pb-12 border-t border-neutral-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -145,6 +145,17 @@ export default function Footer({ onSelectCategory, onOpenAdmin, settings }) {
                   Linen & Cotton Relaxed Trousers
                 </button>
               </li>
+              {onOpenSizeGuide && (
+                <li className="pt-1.5 border-t border-neutral-800/80">
+                  <button 
+                    onClick={onOpenSizeGuide} 
+                    className="text-[#C5A880] hover:text-white transition-colors flex items-center gap-1.5 font-semibold text-xs"
+                  >
+                    <Ruler size={13} />
+                    <span>Official Size Guide (XS–3XL)</span>
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
 

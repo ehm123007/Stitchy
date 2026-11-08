@@ -7,6 +7,7 @@ import CartDrawer from './components/CartDrawer';
 import CheckoutModal from './components/CheckoutModal';
 import ThankYouModal from './components/ThankYouModal';
 import CustomerAccountModal from './components/CustomerAccountModal';
+import SizeGuideModal from './components/SizeGuideModal';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
 import Footer from './components/Footer';
 import AdminLogin from './components/AdminLogin';
@@ -41,6 +42,7 @@ export default function App() {
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
   const [completedOrder, setCompletedOrder] = useState(null);
   const [customerAccountModalOpen, setCustomerAccountModalOpen] = useState(false);
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
 
   // Customer Gmail User Session
   const [customerUser, setCustomerUser] = useState(() => {
@@ -291,6 +293,7 @@ export default function App() {
         onSearchChange={setSearchQuery}
         onOpenAdmin={handleOpenAdminPortal}
         onOpenAccount={() => setCustomerAccountModalOpen(true)}
+        onOpenSizeGuide={() => setSizeGuideOpen(true)}
         customerUser={customerUser}
         settings={settings}
       />
@@ -399,6 +402,7 @@ export default function App() {
           if (el) el.scrollIntoView({ behavior: 'smooth' });
         }}
         onOpenAdmin={handleOpenAdminPortal}
+        onOpenSizeGuide={() => setSizeGuideOpen(true)}
         settings={settings}
       />
 
@@ -410,6 +414,12 @@ export default function App() {
           onAddToCart={handleAddToCart}
         />
       )}
+
+      {/* Standalone Official Hoodie & Garment Size Guide Modal */}
+      <SizeGuideModal
+        isOpen={sizeGuideOpen}
+        onClose={() => setSizeGuideOpen(false)}
+      />
 
       <CartDrawer
         isOpen={cartDrawerOpen}

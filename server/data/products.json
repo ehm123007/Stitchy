@@ -112,6 +112,15 @@
       "washCare": "Gentle cycle, dry flat.",
       "origin": "Northern European Winter Export"
     },
+    "sizeChart": {
+      "XS": { "chest": "33–34.3\" (84–87 cm)", "length": "27\"", "sleeve": "Waist: 72–75 cm" },
+      "S": { "chest": "34.6–36.2\" (88–92 cm)", "length": "28\"", "sleeve": "Waist: 76–80 cm" },
+      "M": { "chest": "36.6–38.6\" (93–98 cm)", "length": "29\"", "sleeve": "Waist: 81–86 cm" },
+      "L": { "chest": "39–41\" (99–104 cm)", "length": "30\"", "sleeve": "Waist: 87–92 cm" },
+      "XL": { "chest": "41.3–43.3\" (105–110 cm)", "length": "31\"", "sleeve": "Waist: 93–98 cm" },
+      "2XL": { "chest": "43.7–45.7\" (111–116 cm)", "length": "32\"", "sleeve": "Waist: 99–104 cm" },
+      "3XL": { "chest": "46.1–48\" (117–122 cm)", "length": "33\"", "sleeve": "Waist: 105–110 cm" }
+    },
     "featured": true,
     "createdAt": "2026-11-08T07:51:32.329Z"
   },

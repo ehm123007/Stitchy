@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Check, ShoppingBag, ShieldCheck, Truck, RotateCcw, Ruler, AlertCircle } from 'lucide-react';
+import SizeGuideModal from './SizeGuideModal';
 
 export default function ProductModal({ product, onClose, onAddToCart }) {
   if (!product) return null;
@@ -225,51 +226,28 @@ export default function ProductModal({ product, onClose, onAddToCart }) {
                     Select Size:
                   </span>
                   <button
-                    onClick={() => setShowSizeGuide(!showSizeGuide)}
-                    className="text-[#8C7A6B] hover:text-neutral-900 font-semibold flex items-center gap-1 underline text-[11px]"
+                    type="button"
+                    onClick={() => setShowSizeGuide(true)}
+                    className="text-[#8C7A6B] hover:text-neutral-900 font-bold flex items-center gap-1.5 px-2.5 py-1 bg-[#FAF8F5] hover:bg-[#F4EFEB] border border-[#E8E5DF] rounded-lg transition-all text-[11px] shadow-2xs"
                   >
-                    <Ruler size={13} />
-                    <span>{showSizeGuide ? 'Hide Size Guide' : 'Size Chart'}</span>
+                    <Ruler size={13} className="text-[#8C7A6B]" />
+                    <span>Official Size Guide (XS–3XL)</span>
                   </button>
                 </div>
 
-                {/* Size Guide Table Toggle */}
-                {showSizeGuide && (
-                  <div className="p-3 bg-[#FAF8F5] border border-[#E8E5DF] rounded-xl text-xs space-y-2 animate-fadeIn">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-neutral-800">
-                        {product.title} • Exact Measurements (Inches):
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-4 gap-1 text-center font-mono text-[11px]">
-                      <div className="font-bold bg-neutral-200 py-1 rounded">Size</div>
-                      <div className="font-bold bg-neutral-200 py-1 rounded">Chest/Waist</div>
-                      <div className="font-bold bg-neutral-200 py-1 rounded">Length</div>
-                      <div className="font-bold bg-neutral-200 py-1 rounded">Sleeve/Inseam</div>
-
-                      {['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'].map((sz, idx) => {
-                        const fallbackChart = {
-                          'XS': { chest: '36-38"', length: '26"', sleeve: '8.5"' },
-                          'S': { chest: '38-40"', length: '27"', sleeve: '9.0"' },
-                          'M': { chest: '40-42"', length: '28"', sleeve: '9.5"' },
-                          'L': { chest: '42-44"', length: '29"', sleeve: '10.0"' },
-                          'XL': { chest: '44-46"', length: '30"', sleeve: '10.5"' },
-                          '2XL': { chest: '46-48"', length: '31"', sleeve: '11.0"' },
-                          '3XL': { chest: '48-50"', length: '32"', sleeve: '11.5"' }
-                        };
-                        const m = (product.sizeChart && product.sizeChart[sz]) || fallbackChart[sz] || {};
-                        return (
-                          <React.Fragment key={sz}>
-                            <div className={`py-1 font-bold text-neutral-800 ${idx < 6 ? 'border-b border-neutral-200' : ''}`}>{sz}</div>
-                            <div className={`py-1 ${idx < 6 ? 'border-b border-neutral-200' : ''}`}>{m.chest || '—'}</div>
-                            <div className={`py-1 ${idx < 6 ? 'border-b border-neutral-200' : ''}`}>{m.length || '—'}</div>
-                            <div className={`py-1 ${idx < 6 ? 'border-b border-neutral-200' : ''}`}>{m.sleeve || '—'}</div>
-                          </React.Fragment>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
+                {/* Size Tip helper */}
+                <div className="flex items-center justify-between px-3 py-1.5 bg-[#FAF8F5] rounded-xl border border-[#E8E5DF] text-[11px] text-neutral-600">
+                  <span className="truncate">
+                    <strong className="text-neutral-900">Size Tip:</strong> Regular fit = usual size • Oversized = size up
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowSizeGuide(true)}
+                    className="font-bold text-neutral-900 underline hover:text-[#8C7A6B] shrink-0 text-[10px] uppercase tracking-wider ml-2"
+                  >
+                    View Chart
+                  </button>
+                </div>
 
                 <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
                   {product.sizes?.map((s) => {
@@ -385,6 +363,17 @@ export default function ProductModal({ product, onClose, onAddToCart }) {
 
       </div>
 
+      {/* Official Hoodie & Apparel Size Guide Modal */}
+      <SizeGuideModal
+        isOpen={showSizeGuide}
+        onClose={() => setShowSizeGuide(false)}
+        selectedSize={selectedSize}
+        onSelectSize={(sz) => {
+          setSelectedSize(sz);
+          setErrorMsg('');
+        }}
+        category={product.category}
+      />
     </div>
   );
 }

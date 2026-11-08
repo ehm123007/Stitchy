@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Search, Menu, X, Shield, Sparkles, MessageCircle, User } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Shield, Sparkles, MessageCircle, User, Ruler } from 'lucide-react';
 
 export default function Navbar({
   cartCount,
@@ -10,6 +10,7 @@ export default function Navbar({
   onSearchChange,
   onOpenAdmin,
   onOpenAccount,
+  onOpenSizeGuide,
   customerUser,
   settings
 }) {
@@ -158,6 +159,19 @@ export default function Navbar({
                 </button>
               )}
             </div>
+
+            {/* Official Size Guide Button */}
+            {onOpenSizeGuide && (
+              <button
+                type="button"
+                onClick={onOpenSizeGuide}
+                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-neutral-700 hover:text-black hover:bg-neutral-100 border border-[#E8E5DF] transition-all shadow-2xs"
+                title="View Official Sizing Guide (XS to 3XL)"
+              >
+                <Ruler size={13} className="text-[#8C7A6B]" />
+                <span>Size Guide</span>
+              </button>
+            )}
 
             {/* Direct WhatsApp Button in Navbar */}
             <a
