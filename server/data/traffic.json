@@ -1,0 +1,552 @@
+[
+  {
+    "id": "tr_1",
+    "timestamp": "2026-11-04T12:42:17.512Z",
+    "date": "2026-11-04",
+    "hour": 18,
+    "device": "Tablet",
+    "ip": "103.114.41.11",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_2",
+    "timestamp": "2026-11-05T10:00:22.740Z",
+    "date": "2026-11-05",
+    "hour": 16,
+    "device": "Mobile iOS",
+    "ip": "103.114.111.65",
+    "path": "/",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_3",
+    "timestamp": "2026-11-05T08:48:01.721Z",
+    "date": "2026-11-05",
+    "hour": 14,
+    "device": "Mobile Android",
+    "ip": "103.114.17.6",
+    "path": "/product/prod_1",
+    "platform": "Android"
+  },
+  {
+    "id": "tr_4",
+    "timestamp": "2026-11-02T02:01:44.302Z",
+    "date": "2026-11-02",
+    "hour": 8,
+    "device": "Tablet",
+    "ip": "103.114.60.6",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_5",
+    "timestamp": "2026-11-02T00:29:55.609Z",
+    "date": "2026-11-02",
+    "hour": 6,
+    "device": "Tablet",
+    "ip": "103.114.180.58",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_6",
+    "timestamp": "2026-11-03T21:39:50.683Z",
+    "date": "2026-11-03",
+    "hour": 3,
+    "device": "Desktop",
+    "ip": "103.114.146.209",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_7",
+    "timestamp": "2026-11-03T06:46:00.685Z",
+    "date": "2026-11-03",
+    "hour": 12,
+    "device": "Mobile Android",
+    "ip": "103.114.41.117",
+    "path": "/",
+    "platform": "Android"
+  },
+  {
+    "id": "tr_8",
+    "timestamp": "2026-11-07T00:42:19.154Z",
+    "date": "2026-11-07",
+    "hour": 6,
+    "device": "Mobile iOS",
+    "ip": "103.114.131.247",
+    "path": "/",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_9",
+    "timestamp": "2026-11-06T19:32:29.407Z",
+    "date": "2026-11-06",
+    "hour": 1,
+    "device": "Desktop",
+    "ip": "103.114.10.13",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_10",
+    "timestamp": "2026-11-07T23:45:06.408Z",
+    "date": "2026-11-07",
+    "hour": 5,
+    "device": "Mobile iOS",
+    "ip": "103.114.129.224",
+    "path": "/product/prod_1",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_11",
+    "timestamp": "2026-11-02T14:26:20.050Z",
+    "date": "2026-11-02",
+    "hour": 20,
+    "device": "Mobile Android",
+    "ip": "103.114.3.248",
+    "path": "/",
+    "platform": "Android"
+  },
+  {
+    "id": "tr_12",
+    "timestamp": "2026-11-06T06:21:19.073Z",
+    "date": "2026-11-06",
+    "hour": 12,
+    "device": "Mobile Android",
+    "ip": "103.114.237.39",
+    "path": "/product/prod_1",
+    "platform": "Android"
+  },
+  {
+    "id": "tr_13",
+    "timestamp": "2026-11-07T10:40:54.998Z",
+    "date": "2026-11-07",
+    "hour": 16,
+    "device": "Mobile iOS",
+    "ip": "103.114.171.11",
+    "path": "/",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_14",
+    "timestamp": "2026-11-02T06:26:38.362Z",
+    "date": "2026-11-02",
+    "hour": 12,
+    "device": "Mobile Android",
+    "ip": "103.114.88.58",
+    "path": "/",
+    "platform": "Android"
+  },
+  {
+    "id": "tr_15",
+    "timestamp": "2026-11-05T02:08:47.810Z",
+    "date": "2026-11-05",
+    "hour": 8,
+    "device": "Desktop",
+    "ip": "103.114.74.247",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_16",
+    "timestamp": "2026-11-06T14:37:35.305Z",
+    "date": "2026-11-06",
+    "hour": 20,
+    "device": "Mobile iOS",
+    "ip": "103.114.238.66",
+    "path": "/",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_17",
+    "timestamp": "2026-11-02T18:48:05.028Z",
+    "date": "2026-11-02",
+    "hour": 0,
+    "device": "Mobile iOS",
+    "ip": "103.114.143.59",
+    "path": "/",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_18",
+    "timestamp": "2026-11-02T21:34:20.943Z",
+    "date": "2026-11-02",
+    "hour": 3,
+    "device": "Desktop",
+    "ip": "103.114.78.37",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_19",
+    "timestamp": "2026-11-07T18:31:38.631Z",
+    "date": "2026-11-07",
+    "hour": 0,
+    "device": "Mobile iOS",
+    "ip": "103.114.28.118",
+    "path": "/product/prod_1",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_20",
+    "timestamp": "2026-11-06T16:09:55.002Z",
+    "date": "2026-11-06",
+    "hour": 22,
+    "device": "Desktop",
+    "ip": "103.114.197.11",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_21",
+    "timestamp": "2026-11-03T00:25:29.278Z",
+    "date": "2026-11-03",
+    "hour": 6,
+    "device": "Tablet",
+    "ip": "103.114.188.247",
+    "path": "/product/prod_1",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_22",
+    "timestamp": "2026-11-05T02:02:03.870Z",
+    "date": "2026-11-05",
+    "hour": 8,
+    "device": "Mobile iOS",
+    "ip": "103.114.83.228",
+    "path": "/",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_23",
+    "timestamp": "2026-11-04T20:48:42.238Z",
+    "date": "2026-11-04",
+    "hour": 2,
+    "device": "Mobile iOS",
+    "ip": "103.114.146.90",
+    "path": "/",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_24",
+    "timestamp": "2026-11-02T13:31:02.087Z",
+    "date": "2026-11-02",
+    "hour": 19,
+    "device": "Desktop",
+    "ip": "103.114.206.52",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_25",
+    "timestamp": "2026-11-01T18:11:08.477Z",
+    "date": "2026-11-01",
+    "hour": 0,
+    "device": "Mobile Android",
+    "ip": "103.114.39.179",
+    "path": "/product/prod_1",
+    "platform": "Android"
+  },
+  {
+    "id": "tr_26",
+    "timestamp": "2026-11-01T12:35:25.137Z",
+    "date": "2026-11-01",
+    "hour": 18,
+    "device": "Mobile iOS",
+    "ip": "103.114.194.112",
+    "path": "/",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_27",
+    "timestamp": "2026-11-05T23:48:43.336Z",
+    "date": "2026-11-05",
+    "hour": 5,
+    "device": "Desktop",
+    "ip": "103.114.160.146",
+    "path": "/product/prod_1",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_28",
+    "timestamp": "2026-11-05T20:07:11.679Z",
+    "date": "2026-11-05",
+    "hour": 2,
+    "device": "Desktop",
+    "ip": "103.114.236.105",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_29",
+    "timestamp": "2026-11-01T16:42:25.484Z",
+    "date": "2026-11-01",
+    "hour": 22,
+    "device": "Mobile Android",
+    "ip": "103.114.220.0",
+    "path": "/product/prod_1",
+    "platform": "Android"
+  },
+  {
+    "id": "tr_30",
+    "timestamp": "2026-11-03T02:34:01.189Z",
+    "date": "2026-11-03",
+    "hour": 8,
+    "device": "Mobile iOS",
+    "ip": "103.114.160.244",
+    "path": "/",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_31",
+    "timestamp": "2026-11-03T14:50:06.602Z",
+    "date": "2026-11-03",
+    "hour": 20,
+    "device": "Mobile Android",
+    "ip": "103.114.98.98",
+    "path": "/",
+    "platform": "Android"
+  },
+  {
+    "id": "tr_32",
+    "timestamp": "2026-11-07T11:57:01.848Z",
+    "date": "2026-11-07",
+    "hour": 17,
+    "device": "Mobile iOS",
+    "ip": "103.114.53.34",
+    "path": "/product/prod_1",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_33",
+    "timestamp": "2026-11-01T16:12:43.700Z",
+    "date": "2026-11-01",
+    "hour": 22,
+    "device": "Tablet",
+    "ip": "103.114.242.61",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_34",
+    "timestamp": "2026-11-05T11:34:03.193Z",
+    "date": "2026-11-05",
+    "hour": 17,
+    "device": "Mobile iOS",
+    "ip": "103.114.35.234",
+    "path": "/",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_35",
+    "timestamp": "2026-11-04T22:20:04.001Z",
+    "date": "2026-11-04",
+    "hour": 4,
+    "device": "Mobile iOS",
+    "ip": "103.114.224.243",
+    "path": "/product/prod_1",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_36",
+    "timestamp": "2026-11-03T03:32:24.573Z",
+    "date": "2026-11-03",
+    "hour": 9,
+    "device": "Mobile Android",
+    "ip": "103.114.157.29",
+    "path": "/",
+    "platform": "Android"
+  },
+  {
+    "id": "tr_37",
+    "timestamp": "2026-11-05T18:20:26.505Z",
+    "date": "2026-11-05",
+    "hour": 0,
+    "device": "Mobile iOS",
+    "ip": "103.114.24.108",
+    "path": "/product/prod_1",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_38",
+    "timestamp": "2026-11-03T06:48:27.134Z",
+    "date": "2026-11-03",
+    "hour": 12,
+    "device": "Desktop",
+    "ip": "103.114.94.4",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_39",
+    "timestamp": "2026-11-02T21:21:00.404Z",
+    "date": "2026-11-02",
+    "hour": 3,
+    "device": "Mobile Android",
+    "ip": "103.114.187.41",
+    "path": "/",
+    "platform": "Android"
+  },
+  {
+    "id": "tr_40",
+    "timestamp": "2026-11-07T03:17:04.418Z",
+    "date": "2026-11-07",
+    "hour": 9,
+    "device": "Mobile Android",
+    "ip": "103.114.108.155",
+    "path": "/",
+    "platform": "Android"
+  },
+  {
+    "id": "tr_41",
+    "timestamp": "2026-11-04T13:10:52.099Z",
+    "date": "2026-11-04",
+    "hour": 19,
+    "device": "Mobile Android",
+    "ip": "103.114.54.73",
+    "path": "/",
+    "platform": "Android"
+  },
+  {
+    "id": "tr_42",
+    "timestamp": "2026-11-05T00:47:22.696Z",
+    "date": "2026-11-05",
+    "hour": 6,
+    "device": "Tablet",
+    "ip": "103.114.119.159",
+    "path": "/product/prod_1",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_43",
+    "timestamp": "2026-11-05T01:34:44.520Z",
+    "date": "2026-11-05",
+    "hour": 7,
+    "device": "Tablet",
+    "ip": "103.114.132.54",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_44",
+    "timestamp": "2026-11-06T10:09:08.484Z",
+    "date": "2026-11-06",
+    "hour": 16,
+    "device": "Mobile Android",
+    "ip": "103.114.85.52",
+    "path": "/",
+    "platform": "Android"
+  },
+  {
+    "id": "tr_45",
+    "timestamp": "2026-11-07T05:01:47.601Z",
+    "date": "2026-11-07",
+    "hour": 11,
+    "device": "Mobile Android",
+    "ip": "103.114.159.75",
+    "path": "/",
+    "platform": "Android"
+  },
+  {
+    "id": "tr_46",
+    "timestamp": "2026-11-01T19:50:39.460Z",
+    "date": "2026-11-01",
+    "hour": 1,
+    "device": "Mobile iOS",
+    "ip": "103.114.94.63",
+    "path": "/",
+    "platform": "iPhone"
+  },
+  {
+    "id": "tr_47",
+    "timestamp": "2026-11-01T08:44:23.953Z",
+    "date": "2026-11-01",
+    "hour": 14,
+    "device": "Tablet",
+    "ip": "103.114.177.118",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_48",
+    "timestamp": "2026-11-07T12:45:41.065Z",
+    "date": "2026-11-07",
+    "hour": 18,
+    "device": "Tablet",
+    "ip": "103.114.159.81",
+    "path": "/",
+    "platform": "Windows/Mac"
+  },
+  {
+    "id": "tr_1794132484977_th8j",
+    "timestamp": "2026-11-08T10:08:04.975Z",
+    "date": "2026-11-08",
+    "hour": 16,
+    "device": "Desktop",
+    "ip": "::1",
+    "path": "/",
+    "referer": ""
+  },
+  {
+    "id": "tr_1794133630476_dt08",
+    "timestamp": "2026-11-08T10:27:10.471Z",
+    "date": "2026-11-08",
+    "hour": 16,
+    "device": "Desktop",
+    "ip": "::1",
+    "path": "/",
+    "referer": ""
+  },
+  {
+    "id": "tr_1794135004578_md40",
+    "timestamp": "2026-11-08T10:50:04.569Z",
+    "date": "2026-11-08",
+    "hour": 16,
+    "device": "Desktop",
+    "ip": "::1",
+    "path": "/",
+    "referer": ""
+  },
+  {
+    "id": "tr_1794135878270_0lwk",
+    "timestamp": "2026-11-08T11:04:38.268Z",
+    "date": "2026-11-08",
+    "hour": 17,
+    "device": "Desktop",
+    "ip": "::1",
+    "path": "/",
+    "referer": ""
+  },
+  {
+    "id": "tr_1794136922923_r10k",
+    "timestamp": "2026-11-08T11:22:02.921Z",
+    "date": "2026-11-08",
+    "hour": 17,
+    "device": "Desktop",
+    "ip": "::1",
+    "path": "/",
+    "referer": ""
+  },
+  {
+    "id": "tr_1794137388826_34ho",
+    "timestamp": "2026-11-08T11:29:48.824Z",
+    "date": "2026-11-08",
+    "hour": 17,
+    "device": "Desktop",
+    "ip": "::1",
+    "path": "/",
+    "referer": ""
+  },
+  {
+    "id": "tr_1794138297440_7pgd",
+    "timestamp": "2026-11-08T11:44:57.429Z",
+    "date": "2026-11-08",
+    "hour": 17,
+    "device": "Desktop",
+    "ip": "::1",
+    "path": "/",
+    "referer": ""
+  }
+]

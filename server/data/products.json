@@ -1,0 +1,231 @@
+[
+  {
+    "id": "prod_1",
+    "title": "Heavyweight Drop-Shoulder Oversized Tee",
+    "subtitle": "European Export Surplus • 240 GSM Organic Combed Cotton",
+    "category": "T-Shirts & Tops",
+    "price": 890,
+    "originalPrice": 1250,
+    "badge": "Export Bestseller",
+    "colors": [
+      "Washed Charcoal",
+      "Vintage Ivory",
+      "Sage Green",
+      "Jet Black"
+    ],
+    "sizes": [
+      { "size": "XS", "stock": 6 },
+      { "size": "S", "stock": 10 },
+      { "size": "M", "stock": 18 },
+      { "size": "L", "stock": 20 },
+      { "size": "XL", "stock": 14 },
+      { "size": "2XL", "stock": 8 },
+      { "size": "3XL", "stock": 5 }
+    ],
+    "totalStock": 81,
+    "images": [
+      "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=900&q=80"
+    ],
+    "description": "Authentic pure export heavyweight tee crafted from luxury 240 GSM 100% compact combed cotton. Double-needle stitch collar, pre-shrunk fabric with subtle vintage enzyme wash finish. Designed for premium durability and relaxed streetwear comfort.",
+    "specs": {
+      "fabric": "100% Ring-Spun Combed Cotton",
+      "gsm": "240 GSM (Dense & Structured)",
+      "cut": "Boxy Drop-Shoulder Relaxed Fit",
+      "washCare": "Machine wash cold, inside out. Tumble dry low.",
+      "origin": "Target Export to Scandinavia / Germany"
+    },
+    "featured": true,
+    "createdAt": "2026-11-08T07:51:32.328Z"
+  },
+  {
+    "id": "prod_2",
+    "title": "Relaxed Vintage Flannel Overshirt",
+    "subtitle": "US Export Surplus • Brushed Yarn-Dyed Cotton Plaid",
+    "category": "Shirts & Flannels",
+    "price": 1390,
+    "originalPrice": 1850,
+    "badge": "Pure Export",
+    "colors": [
+      "Earthy Forest Plaid",
+      "Charcoal Ombre",
+      "Camel Tartan"
+    ],
+    "sizes": [
+      { "size": "XS", "stock": 4 },
+      { "size": "S", "stock": 8 },
+      { "size": "M", "stock": 15 },
+      { "size": "L", "stock": 16 },
+      { "size": "XL", "stock": 10 },
+      { "size": "2XL", "stock": 6 },
+      { "size": "3XL", "stock": 4 }
+    ],
+    "totalStock": 63,
+    "images": [
+      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=900&q=80"
+    ],
+    "description": "Crafted for chilly evenings and everyday layer aesthetics. Premium brushed twill fabric with double chest utility pockets and genuine horn buttons. Pure export overstock originally tailored for North American high-street retailers.",
+    "specs": {
+      "fabric": "100% Brushed Cotton Twill",
+      "gsm": "210 GSM",
+      "cut": "Classic Overshirt / Relaxed Layering",
+      "washCare": "Cold hand or machine wash.",
+      "origin": "US High-Street Brand Surplus"
+    },
+    "featured": true,
+    "createdAt": "2026-11-08T07:51:32.329Z"
+  },
+  {
+    "id": "prod_3",
+    "title": "Minimal French Terry Hoodie - 380 GSM",
+    "subtitle": "Nordic Export Quality • Brushed Interior, Anti-Pilling",
+    "category": "Hoodies & Jackets",
+    "price": 1750,
+    "originalPrice": 2400,
+    "badge": "Limited Batch",
+    "colors": [
+      "Oatmeal Heather",
+      "Deep Olive",
+      "Midnight Black"
+    ],
+    "sizes": [
+      { "size": "XS", "stock": 5 },
+      { "size": "S", "stock": 9 },
+      { "size": "M", "stock": 14 },
+      { "size": "L", "stock": 16 },
+      { "size": "XL", "stock": 11 },
+      { "size": "2XL", "stock": 7 },
+      { "size": "3XL", "stock": 4 }
+    ],
+    "totalStock": 66,
+    "images": [
+      "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=900&q=80"
+    ],
+    "description": "Luxuriously thick 380 GSM fleece with clean minimal finish without garish branding. Double-lined hood, seamless kangaroo pouch, and reinforced ribbed hems that stay snug wash after wash.",
+    "specs": {
+      "fabric": "85% Cotton, 15% Poly Fleece Anti-Pilling",
+      "gsm": "380 GSM Ultra-Heavy",
+      "cut": "Tailored Streetwear Cut",
+      "washCare": "Gentle cycle, dry flat.",
+      "origin": "Northern European Winter Export"
+    },
+    "featured": true,
+    "createdAt": "2026-11-08T07:51:32.329Z"
+  },
+  {
+    "id": "prod_4",
+    "title": "Pleated Linen-Cotton Relaxed Trousers",
+    "subtitle": "Italian Export Tailoring • Breathable Pre-Washed Blend",
+    "category": "Pants & Bottoms",
+    "price": 1450,
+    "originalPrice": 1950,
+    "badge": "Summer Essential",
+    "colors": [
+      "Sand Beige",
+      "Natural Ecru",
+      "Slate Grey"
+    ],
+    "sizes": [
+      { "size": "XS (28)", "stock": 5 },
+      { "size": "S (30)", "stock": 9 },
+      { "size": "M (32)", "stock": 14 },
+      { "size": "L (34)", "stock": 12 },
+      { "size": "XL (36)", "stock": 8 },
+      { "size": "2XL (38)", "stock": 6 },
+      { "size": "3XL (40)", "stock": 4 }
+    ],
+    "totalStock": 58,
+    "images": [
+      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1479064555552-3ef4979f8908?auto=format&fit=crop&w=900&q=80"
+    ],
+    "description": "Effortless Mediterranean resort aesthetics made for Bangladesh climate. Single forward pleat with elasticated waistband and internal drawstring for supreme all-day comfort.",
+    "specs": {
+      "fabric": "55% French Linen, 45% Combed Cotton",
+      "gsm": "180 GSM Lightweight Twill",
+      "cut": "Relaxed Tapered Fit",
+      "washCare": "Machine wash cold.",
+      "origin": "Southern Europe Summer Export"
+    },
+    "featured": true,
+    "createdAt": "2026-11-08T07:51:32.329Z"
+  },
+  {
+    "id": "prod_5",
+    "title": "Minimal Structured Harrington Jacket",
+    "subtitle": "UK Export Surplus • Water-Resistant Cotton Shell",
+    "category": "Hoodies & Jackets",
+    "price": 2190,
+    "originalPrice": 2950,
+    "badge": "Pure Export",
+    "colors": [
+      "Matte Black",
+      "Khaki Stone"
+    ],
+    "sizes": [
+      { "size": "XS", "stock": 4 },
+      { "size": "S", "stock": 7 },
+      { "size": "M", "stock": 12 },
+      { "size": "L", "stock": 14 },
+      { "size": "XL", "stock": 9 },
+      { "size": "2XL", "stock": 5 },
+      { "size": "3XL", "stock": 3 }
+    ],
+    "totalStock": 54,
+    "images": [
+      "https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=900&q=80"
+    ],
+    "description": "Classic British Harrington silhouette with stand-up dual-button collar, YKK antique brass dual zipper, and tartan lining. Timeless and versatile for meetings or casual evenings.",
+    "specs": {
+      "fabric": "100% Water-Resistant Peached Cotton Shell",
+      "gsm": "260 GSM",
+      "cut": "Regular Smart-Casual Fit",
+      "washCare": "Dry clean or cold sponge wipe.",
+      "origin": "British Heritage Brand Surplus"
+    },
+    "featured": false,
+    "createdAt": "2026-11-08T07:51:32.329Z"
+  },
+  {
+    "id": "prod_6",
+    "title": "Washed Mercerized Cotton Pique Polo",
+    "subtitle": "Japanese Export Line • Mother of Pearl Buttons",
+    "category": "T-Shirts & Tops",
+    "price": 1050,
+    "originalPrice": 1500,
+    "badge": "Export Bestseller",
+    "colors": [
+      "Navy Blue",
+      "Off-White",
+      "Muted Sage"
+    ],
+    "sizes": [
+      { "size": "XS", "stock": 6 },
+      { "size": "S", "stock": 10 },
+      { "size": "M", "stock": 16 },
+      { "size": "L", "stock": 18 },
+      { "size": "XL", "stock": 12 },
+      { "size": "2XL", "stock": 7 },
+      { "size": "3XL", "stock": 4 }
+    ],
+    "totalStock": 73,
+    "images": [
+      "https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80"
+    ],
+    "description": "Silky smooth mercerized cotton pique with zero collar curl. Subtle contrast ribbing on cuffs with genuine mother-of-pearl buttons. Cool and breathable for all seasons.",
+    "specs": {
+      "fabric": "100% Double Mercerized Combed Cotton",
+      "gsm": "220 GSM Pique",
+      "cut": "Modern Athletic Fit",
+      "washCare": "Machine wash 30°C.",
+      "origin": "Tokyo Department Store Export Line"
+    },
+    "featured": false,
+    "createdAt": "2026-11-08T07:51:32.329Z"
+  }
+]

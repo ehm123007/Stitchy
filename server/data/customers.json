@@ -1,0 +1,35 @@
+[
+  {
+    "id": "cust_1",
+    "name": "Tanvir Ahmed",
+    "phone": "01712-345678",
+    "email": "tanvir.ahmed@example.com",
+    "city": "Dhaka",
+    "address": "House 42, Road 11, Sector 4, Uttara",
+    "totalOrders": 1,
+    "totalSpent": 1672,
+    "lastOrderDate": "2026-11-08T07:51:32.346Z"
+  },
+  {
+    "id": "cust_2",
+    "name": "Nusrat Jahan",
+    "phone": "01819-876543",
+    "email": "nusrat.jahan@example.com",
+    "city": "Chittagong",
+    "address": "East Nasirabad, Block B, Road 3",
+    "totalOrders": 1,
+    "totalSpent": 1520,
+    "lastOrderDate": "2026-11-08T07:51:32.346Z"
+  },
+  {
+    "id": "cust_1794125009111",
+    "name": "Test Customer",
+    "phone": "01700112233",
+    "email": "test@example.com",
+    "city": "Dhaka",
+    "address": "Banani Road 11",
+    "totalOrders": 1,
+    "totalSpent": 960,
+    "lastOrderDate": "2026-11-08T08:03:29.073Z"
+  }
+]

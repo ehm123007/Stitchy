@@ -1,0 +1,122 @@
+[
+  {
+    "id": "ord_1794125009073",
+    "referenceNo": "STY-2026-2553",
+    "createdAt": "2026-11-08T08:03:29.073Z",
+    "customer": {
+      "name": "Test Customer",
+      "phone": "01700112233",
+      "email": "test@example.com",
+      "address": "Banani Road 11",
+      "landmark": "Beside Star Kabab",
+      "postalCode": "",
+      "city": "Dhaka",
+      "deliveryZone": "inside"
+    },
+    "items": [
+      {
+        "productId": "prod_1",
+        "title": "Heavyweight Drop-Shoulder Oversized Tee",
+        "price": 890,
+        "quantity": 1,
+        "size": "M",
+        "color": "Washed Charcoal",
+        "image": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80"
+      }
+    ],
+    "subtotal": 890,
+    "discount": 0,
+    "promoCode": null,
+    "deliveryFee": 70,
+    "total": 960,
+    "advancePaid": 70,
+    "balanceDue": 890,
+    "paymentMethod": "cod_advance",
+    "paymentProofScreenshot": null,
+    "transactionId": "TXNTEST123",
+    "status": "Pending Verification",
+    "adminNotes": "",
+    "emailSent": false,
+    "verifiedAt": null
+  },
+  {
+    "id": "ord_1",
+    "referenceNo": "STY-2026-4821",
+    "createdAt": "2026-11-07T07:51:32.342Z",
+    "customer": {
+      "name": "Tanvir Ahmed",
+      "phone": "01712-345678",
+      "email": "tanvir.ahmed@example.com",
+      "address": "House 42, Road 11, Sector 4, Uttara",
+      "landmark": "Near Sector 4 Park",
+      "postalCode": "1230",
+      "city": "Dhaka",
+      "deliveryZone": "inside"
+    },
+    "items": [
+      {
+        "productId": "prod_1",
+        "title": "Heavyweight Drop-Shoulder Oversized Tee",
+        "price": 890,
+        "quantity": 2,
+        "size": "L",
+        "color": "Vintage Ivory",
+        "image": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80"
+      }
+    ],
+    "subtotal": 1780,
+    "discount": 178,
+    "promoCode": "EXPORT10",
+    "deliveryFee": 70,
+    "total": 1672,
+    "advancePaid": 70,
+    "balanceDue": 1602,
+    "paymentMethod": "cod_advance",
+    "paymentProofScreenshot": "/uploads/bangla-qr-sample.svg",
+    "transactionId": "TXN982341BK",
+    "status": "Pending Verification",
+    "adminNotes": "Customer paid ৳70 delivery charge via bKash Bangla QR.",
+    "emailSent": false,
+    "verifiedAt": null
+  },
+  {
+    "id": "ord_2",
+    "referenceNo": "STY-2026-7719",
+    "createdAt": "2026-11-08T01:51:32.342Z",
+    "customer": {
+      "name": "Nusrat Jahan",
+      "phone": "01819-876543",
+      "email": "nusrat.jahan@example.com",
+      "address": "East Nasirabad, Block B, Road 3",
+      "landmark": "Opposite Khulshi Mart",
+      "postalCode": "4000",
+      "city": "Chittagong",
+      "deliveryZone": "outside"
+    },
+    "items": [
+      {
+        "productId": "prod_2",
+        "title": "Relaxed Vintage Flannel Overshirt",
+        "price": 1390,
+        "quantity": 1,
+        "size": "M",
+        "color": "Earthy Forest Plaid",
+        "image": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=900&q=80"
+      }
+    ],
+    "subtotal": 1390,
+    "discount": 0,
+    "promoCode": null,
+    "deliveryFee": 130,
+    "total": 1520,
+    "advancePaid": 1520,
+    "balanceDue": 0,
+    "paymentMethod": "bangla_qr_full",
+    "paymentProofScreenshot": "/uploads/bangla-qr-sample.svg",
+    "transactionId": "TXN771029NG",
+    "status": "Confirmed",
+    "adminNotes": "Full payment verified via Nagad Bangla QR. Dispatched via Steadfast Courier.",
+    "emailSent": true,
+    "verifiedAt": "2026-11-08T03:51:32.342Z"
+  }
+]

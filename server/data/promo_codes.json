@@ -1,0 +1,38 @@
+[
+  {
+    "id": "promo_1",
+    "code": "EXPORT10",
+    "type": "percent",
+    "value": 10,
+    "minOrder": 800,
+    "maxUses": 500,
+    "currentUses": 14,
+    "description": "10% discount on pure export collection",
+    "active": true,
+    "expiryDate": "2026-12-31"
+  },
+  {
+    "id": "promo_2",
+    "code": "WELCOME50",
+    "type": "flat",
+    "value": 50,
+    "minOrder": 500,
+    "maxUses": 1000,
+    "currentUses": 32,
+    "description": "৳50 off for first-time shoppers",
+    "active": true,
+    "expiryDate": "2026-12-31"
+  },
+  {
+    "id": "promo_3",
+    "code": "EIDVIP",
+    "type": "percent",
+    "value": 15,
+    "minOrder": 2000,
+    "maxUses": 200,
+    "currentUses": 5,
+    "description": "15% off on VIP orders over ৳2000",
+    "active": true,
+    "expiryDate": "2026-12-31"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "usr_1",
+    "name": "Emdadul Haque (Admin)",
+    "email": "admin@stitchy.com",
+    "passwordHash": "$2b$10$zKXylZEJJkuTXSPyzvVbk.qiZJ.gP2kad.0Lhj1MeMHrw9B6UCfvu",
+    "role": "Super Admin",
+    "createdAt": "2026-11-08T07:51:32.322Z"
+  },
+  {
+    "id": "usr_official",
+    "name": "Emdadul Haque (Official)",
+    "email": "stitchy123007@gmail.com",
+    "passwordHash": "$2b$10$zKXylZEJJkuTXSPyzvVbk.qiZJ.gP2kad.0Lhj1MeMHrw9B6UCfvu",
+    "role": "Super Admin",
+    "createdAt": "2026-11-08T07:51:32.322Z"
+  },
+  {
+    "id": "usr_2",
+    "name": "Order Manager",
+    "email": "team@stitchy.com",
+    "passwordHash": "$2b$10$zKXylZEJJkuTXSPyzvVbk.qiZJ.gP2kad.0Lhj1MeMHrw9B6UCfvu",
+    "role": "Operations & Dispatch",
+    "createdAt": "2026-11-08T07:51:32.324Z"
+  }
+]
