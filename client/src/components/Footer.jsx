@@ -20,8 +20,8 @@ export default function Footer({ onSelectCategory, onOpenAdmin, settings }) {
     <footer className="bg-[#121212] text-[#FDFBF7] pt-16 pb-12 border-t border-neutral-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
-        {/* Top 3 Value Pillars */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-12 border-b border-neutral-800">
+        {/* Value Pillars */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-12 border-b border-neutral-800">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-2xl bg-neutral-800/80 border border-neutral-700 flex items-center justify-center text-[#C5A880] shrink-0">
               <ShieldCheck size={24} />
@@ -39,21 +39,9 @@ export default function Footer({ onSelectCategory, onOpenAdmin, settings }) {
               <Truck size={24} />
             </div>
             <div>
-              <h4 className="font-serif-luxury text-base font-semibold text-white">Rapid Islandwide Dispatch</h4>
+              <h4 className="font-serif-luxury text-base font-semibold text-white">Rapid Nationwide Delivery</h4>
               <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
                 Flat ৳70 within Dhaka Metropolitan (24-48h) and ৳130 across all Bangladesh districts (48-72h).
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-neutral-800/80 border border-neutral-700 flex items-center justify-center text-[#C5A880] shrink-0">
-              <RotateCcw size={24} />
-            </div>
-            <div>
-              <h4 className="font-serif-luxury text-base font-semibold text-white">Hassle-Free Size Exchange</h4>
-              <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-                Size fit not perfect? We provide prompt doorstep exchange across Bangladesh with our courier partners.
               </p>
             </div>
           </div>

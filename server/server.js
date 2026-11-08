@@ -949,7 +949,7 @@ app.post('/api/orders/:id/send-email', authenticateToken, async (req, res) => {
       </div>
 
       <div style="margin-top: 24px; text-align: center; border-top: 1px solid #E8E5DF; padding-top: 18px;">
-        <p style="font-size: 12px; color: #6B7280; margin: 0 0 8px;">Need instant help or exchange inquiries? Contact our WhatsApp team:</p>
+        <p style="font-size: 12px; color: #6B7280; margin: 0 0 8px;">Need instant help or order inquiries? Contact our WhatsApp team:</p>
         <a href="${settings.whatsappUrl || 'https://api.whatsapp.com/send/?phone=8801875413743'}" style="display: inline-block; background: #25D366; color: #FFFFFF; text-decoration: none; padding: 10px 20px; border-radius: 999px; font-size: 12px; font-weight: bold;">
           Chat with STITCHY on WhatsApp (+880 1875-413743)
         </a>

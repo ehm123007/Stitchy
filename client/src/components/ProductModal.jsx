@@ -373,8 +373,8 @@ export default function ProductModal({ product, onClose, onAddToCart }) {
                   Dhaka: ৳70 • Outside: ৳130
                 </span>
                 <span className="flex items-center justify-center gap-1">
-                  <RotateCcw size={12} className="text-[#8C7A6B]" />
-                  Instant Exchange Guarantee
+                  <ShieldCheck size={12} className="text-[#8C7A6B]" />
+                  100% Authentic Export
                 </span>
               </div>
             </div>
