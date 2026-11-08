@@ -320,10 +320,10 @@ export default function App() {
             <div>
               <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-[#8C7A6B] uppercase mb-1">
                 <Sparkles size={13} className="text-[#C5A880]" />
-                <span>Export Consignment Surplus</span>
+                <span>100% Exported Clothes • Global Brands</span>
               </div>
               <h2 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-neutral-900">
-                {selectedCategory === 'All' ? 'All Pure Export Pieces' : selectedCategory}
+                {selectedCategory === 'All' ? 'All Exported Clothes' : selectedCategory}
               </h2>
               <p className="text-xs text-neutral-500 mt-1">
                 Showing {displayedProducts.length} authentic export garments ready for 24-48h dispatch.

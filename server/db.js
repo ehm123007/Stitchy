@@ -153,12 +153,12 @@ function initializeDB() {
       },
       {
         id: 'prod_3',
-        title: 'Minimal French Terry Hoodie - 380 GSM',
+        title: 'French Terry Hoodie - 380 GSM',
         subtitle: 'Nordic Export Quality • Brushed Interior, Anti-Pilling',
         category: 'Hoodies & Jackets',
         price: 1750,
         originalPrice: 2400,
-        badge: 'Limited Batch',
+        badge: 'Global Brand',
         colors: ['Oatmeal Heather', 'Deep Olive', 'Midnight Black'],
         sizes: [
           { size: 'M', stock: 8 },
@@ -215,12 +215,12 @@ function initializeDB() {
       },
       {
         id: 'prod_5',
-        title: 'Minimal Structured Harrington Jacket',
-        subtitle: 'UK Export Surplus • Water-Resistant Cotton Shell',
+        title: 'Structured Harrington Jacket',
+        subtitle: 'UK Export • Water-Resistant Cotton Shell',
         category: 'Hoodies & Jackets',
         price: 2190,
         originalPrice: 2950,
-        badge: 'Pure Export',
+        badge: 'Global Brand',
         colors: ['Matte Black', 'Khaki Stone'],
         sizes: [
           { size: 'M', stock: 5 },

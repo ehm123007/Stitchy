@@ -122,10 +122,10 @@ export default function ProductModal({ product, onClose, onAddToCart }) {
             <div className="p-3.5 bg-[#FAF8F5] rounded-xl border border-[#E8E5DF] text-xs text-neutral-600 space-y-1.5">
               <div className="font-semibold text-neutral-900 flex items-center gap-1.5">
                 <ShieldCheck size={16} className="text-[#C5A880]" />
-                <span>Pure Export Standard Inspection</span>
+                <span>100% Exported Clothes Inspection</span>
               </div>
               <p className="text-[11px] leading-relaxed">
-                Direct export surplus batch. Clean unbranded or authentic factory label. 100% pre-shrunk combed cotton.
+                Direct 100% exported clothes from leading global brands. Authentic factory quality. 100% pre-shrunk combed cotton.
               </p>
             </div>
 

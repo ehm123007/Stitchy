@@ -59,11 +59,11 @@ export default function InventoryManager({ token }) {
   const handleOpenAddModal = () => {
     setEditingProduct({
       title: '',
-      subtitle: 'Pure Export Surplus Garment',
+      subtitle: '100% Exported Clothes',
       category: 'T-Shirts & Tops',
       price: '',
       originalPrice: '',
-      badge: 'Pure Export',
+      badge: 'Global Brand',
       colors: 'Charcoal, Ivory',
       sizes: [
         { size: 'XS', stock: 5 },
@@ -292,7 +292,7 @@ export default function InventoryManager({ token }) {
                           {prod.title}
                         </h3>
                         <p className="text-xs text-neutral-500 mt-0.5 line-clamp-1">
-                          {prod.subtitle || prod.specs?.gsm || 'Pure export surplus'}
+                          {prod.subtitle || prod.specs?.gsm || '100% Exported Clothes'}
                         </p>
                       </div>
 

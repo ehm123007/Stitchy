@@ -28,7 +28,7 @@ export default function BannersAndAdsManager({ token, settings, onSettingsUpdate
       { id: 'p1', icon: '🧵', title: 'Premium Fabric', subtitle: '240+ GSM Organic Cotton' },
       { id: 'p2', icon: '🛡️', title: 'Long Lasting', subtitle: 'Reinforced Double Stitching' },
       { id: 'p3', icon: '👔', title: 'Modern Fit', subtitle: 'Drop-Shoulder Streetwear Cuts' },
-      { id: 'p4', icon: '🤍', title: 'Wear Your Story', subtitle: 'Unbranded Minimal Luxury' }
+      { id: 'p4', icon: '🤍', title: 'Wear Your Story', subtitle: 'Global Brands Quality' }
     ]
   });
 

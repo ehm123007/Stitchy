@@ -282,11 +282,11 @@ app.post('/api/products', authenticateToken, (req, res) => {
   const newProduct = {
     id: `prod_${Date.now()}`,
     title,
-    subtitle: subtitle || 'Pure Export Surplus Garment',
+    subtitle: subtitle || '100% Exported Clothes',
     category,
     price: Number(price),
     originalPrice: originalPrice ? Number(originalPrice) : Math.round(Number(price) * 1.35),
-    badge: badge || 'Pure Export',
+    badge: badge || 'Global Brand',
     colors: Array.isArray(colors) ? colors : (typeof colors === 'string' ? colors.split(',').map(c => c.trim()) : ['Standard']),
     sizes: parsedSizes,
     totalStock,

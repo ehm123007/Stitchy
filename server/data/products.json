@@ -2,7 +2,7 @@
   {
     "id": "prod_1",
     "title": "Heavyweight Drop-Shoulder Oversized Tee",
-    "subtitle": "European Export Surplus • 240 GSM Organic Combed Cotton",
+    "subtitle": "European Export • 240 GSM Organic Combed Cotton",
     "category": "T-Shirts & Tops",
     "price": 890,
     "originalPrice": 1250,
@@ -42,11 +42,11 @@
   {
     "id": "prod_2",
     "title": "Relaxed Vintage Flannel Overshirt",
-    "subtitle": "US Export Surplus • Brushed Yarn-Dyed Cotton Plaid",
+    "subtitle": "US Export • Brushed Yarn-Dyed Cotton Plaid",
     "category": "Shirts & Flannels",
     "price": 1390,
     "originalPrice": 1850,
-    "badge": "Pure Export",
+    "badge": "Global Brand",
     "colors": [
       "Earthy Forest Plaid",
       "Charcoal Ombre",
@@ -66,25 +66,25 @@
       "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=900&q=80",
       "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=900&q=80"
     ],
-    "description": "Crafted for chilly evenings and everyday layer aesthetics. Premium brushed twill fabric with double chest utility pockets and genuine horn buttons. Pure export overstock originally tailored for North American high-street retailers.",
+    "description": "Crafted for chilly evenings and everyday layer aesthetics. Premium brushed twill fabric with double chest utility pockets and genuine horn buttons. 100% export clothes originally tailored for North American high-street retailers.",
     "specs": {
       "fabric": "100% Brushed Cotton Twill",
       "gsm": "210 GSM",
       "cut": "Classic Overshirt / Relaxed Layering",
       "washCare": "Cold hand or machine wash.",
-      "origin": "US High-Street Brand Surplus"
+      "origin": "US High-Street Global Brand"
     },
     "featured": true,
     "createdAt": "2026-11-08T07:51:32.329Z"
   },
   {
     "id": "prod_3",
-    "title": "Minimal French Terry Hoodie - 380 GSM",
+    "title": "French Terry Hoodie - 380 GSM",
     "subtitle": "Nordic Export Quality • Brushed Interior, Anti-Pilling",
     "category": "Hoodies & Jackets",
     "price": 1750,
     "originalPrice": 2400,
-    "badge": "Limited Batch",
+    "badge": "Global Brand",
     "colors": [
       "Oatmeal Heather",
       "Deep Olive",
@@ -104,7 +104,7 @@
       "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=900&q=80",
       "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=900&q=80"
     ],
-    "description": "Luxuriously thick 380 GSM fleece with clean minimal finish without garish branding. Double-lined hood, seamless kangaroo pouch, and reinforced ribbed hems that stay snug wash after wash.",
+    "description": "Luxuriously thick 380 GSM fleece from premier global export brands. Double-lined hood, seamless kangaroo pouch, and reinforced ribbed hems that stay snug wash after wash.",
     "specs": {
       "fabric": "85% Cotton, 15% Poly Fleece Anti-Pilling",
       "gsm": "380 GSM Ultra-Heavy",
@@ -155,12 +155,12 @@
   },
   {
     "id": "prod_5",
-    "title": "Minimal Structured Harrington Jacket",
-    "subtitle": "UK Export Surplus • Water-Resistant Cotton Shell",
+    "title": "Structured Harrington Jacket",
+    "subtitle": "UK Export • Water-Resistant Cotton Shell",
     "category": "Hoodies & Jackets",
     "price": 2190,
     "originalPrice": 2950,
-    "badge": "Pure Export",
+    "badge": "Global Brand",
     "colors": [
       "Matte Black",
       "Khaki Stone"
@@ -185,7 +185,7 @@
       "gsm": "260 GSM",
       "cut": "Regular Smart-Casual Fit",
       "washCare": "Dry clean or cold sponge wipe.",
-      "origin": "British Heritage Brand Surplus"
+      "origin": "British Heritage Global Brand"
     },
     "featured": false,
     "createdAt": "2026-11-08T07:51:32.329Z"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Truck, RotateCcw, Heart, Phone, Mail, Lock } from 'lucide-react';
+import { ShieldCheck, Truck, Globe, Heart, Phone, Mail, Lock } from 'lucide-react';
 
 const FacebookIcon = () => (
   <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -21,15 +21,27 @@ export default function Footer({ onSelectCategory, onOpenAdmin, settings }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
         {/* Value Pillars */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-12 border-b border-neutral-800">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-12 border-b border-neutral-800">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-2xl bg-neutral-800/80 border border-neutral-700 flex items-center justify-center text-[#C5A880] shrink-0">
               <ShieldCheck size={24} />
             </div>
             <div>
-              <h4 className="font-serif-luxury text-base font-semibold text-white">Pure Export Surplus</h4>
+              <h4 className="font-serif-luxury text-base font-semibold text-white">100% Exported Clothes</h4>
               <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
                 Authentic export consignments crafted from 240+ GSM organic combed cotton, double-stitched for enduring wear.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-neutral-800/80 border border-neutral-700 flex items-center justify-center text-[#C5A880] shrink-0">
+              <Globe size={24} />
+            </div>
+            <div>
+              <h4 className="font-serif-luxury text-base font-semibold text-white">Global Brands</h4>
+              <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
+                Original collections from leading global retail fashion houses and international apparel consignments.
               </p>
             </div>
           </div>

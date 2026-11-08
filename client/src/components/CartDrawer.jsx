@@ -83,7 +83,7 @@ export default function CartDrawer({
                 <div>
                   <h3 className="font-serif-luxury text-lg font-semibold text-neutral-900">Your bag is empty</h3>
                   <p className="text-xs text-neutral-500 max-w-xs mt-1">
-                    Discover pure export surplus garments crafted with heavyweight combed cotton.
+                    Discover 100% exported clothes from leading global brands crafted with heavyweight combed cotton.
                   </p>
                 </div>
                 <button
