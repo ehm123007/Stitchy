@@ -1,7 +1,7 @@
 {
   "storeName": "STITCHY",
   "motto": "MADE STITCH BY STITCH",
-  "tagline": "MADE STITCH BY STITCH • Pure Export Apparel",
+  "tagline": "100% Exported Clothes • Global Brands",
   "logoUrl": "/uploads/logo.jpg",
   "coverUrl": "/uploads/cover.jpg",
   "banglaQrUrl": "/uploads/bangla-qr.jpg",
@@ -11,7 +11,28 @@
   "bankInfo": "All Bank Apps / bKash / Nagad / Rocket (Bangla QR Interoperable)",
   "deliveryChargeInside": 70,
   "deliveryChargeOutside": 130,
-  "announcement": "✨ 100% Pure Export Overstock Garments • 48-Hour Rapid Delivery Across Bangladesh",
+  "announcement": "✨ 100% Exported Clothes • 48-Hour Rapid Delivery Across Bangladesh",
+  "footerDescription": "Authentic 100% exported clothes from leading global brands. Premium fabric, long-lasting construction, modern fits. Wear your story with confidence.",
+  "valuePillars": [
+    {
+      "id": "vp1",
+      "icon": "ShieldCheck",
+      "title": "100% Exported Clothes",
+      "description": "Authentic export consignments crafted from 240+ GSM organic combed cotton, double-stitched for enduring wear."
+    },
+    {
+      "id": "vp2",
+      "icon": "Globe",
+      "title": "Global Brands",
+      "description": "Original collections from leading global retail fashion houses and international apparel consignments."
+    },
+    {
+      "id": "vp3",
+      "icon": "Truck",
+      "title": "Rapid Nationwide Delivery",
+      "description": "Flat ৳70 within Dhaka Metropolitan (24-48h) and ৳130 across all Bangladesh districts (48-72h)."
+    }
+  ],
   "supportPhone": "+880 1875-413743",
   "supportEmail": "stitchy123007@gmail.com",
   "whatsappUrl": "https://api.whatsapp.com/send/?phone=8801875413743&text&type=phone_number&app_absent=0",

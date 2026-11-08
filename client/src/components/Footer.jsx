@@ -22,41 +22,38 @@ export default function Footer({ onSelectCategory, onOpenAdmin, onOpenSizeGuide,
         
         {/* Value Pillars */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-12 border-b border-neutral-800">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-neutral-800/80 border border-neutral-700 flex items-center justify-center text-[#C5A880] shrink-0">
-              <ShieldCheck size={24} />
+          {(settings?.valuePillars || [
+            {
+              id: 'vp1',
+              icon: 'ShieldCheck',
+              title: '100% Exported Clothes',
+              description: 'Authentic export consignments crafted from 240+ GSM organic combed cotton, double-stitched for enduring wear.'
+            },
+            {
+              id: 'vp2',
+              icon: 'Globe',
+              title: 'Global Brands',
+              description: 'Original collections from leading global retail fashion houses and international apparel consignments.'
+            },
+            {
+              id: 'vp3',
+              icon: 'Truck',
+              title: 'Rapid Nationwide Delivery',
+              description: 'Flat ৳70 within Dhaka Metropolitan (24-48h) and ৳130 across all Bangladesh districts (48-72h).'
+            }
+          ]).map((pillar, idx) => (
+            <div key={pillar.id || idx} className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-neutral-800/80 border border-neutral-700 flex items-center justify-center text-[#C5A880] shrink-0">
+                {pillar.icon === 'Globe' ? <Globe size={24} /> : pillar.icon === 'Truck' ? <Truck size={24} /> : <ShieldCheck size={24} />}
+              </div>
+              <div>
+                <h4 className="font-serif-luxury text-base font-semibold text-white">{pillar.title}</h4>
+                <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
+                  {pillar.description}
+                </p>
+              </div>
             </div>
-            <div>
-              <h4 className="font-serif-luxury text-base font-semibold text-white">100% Exported Clothes</h4>
-              <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-                Authentic export consignments crafted from 240+ GSM organic combed cotton, double-stitched for enduring wear.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-neutral-800/80 border border-neutral-700 flex items-center justify-center text-[#C5A880] shrink-0">
-              <Globe size={24} />
-            </div>
-            <div>
-              <h4 className="font-serif-luxury text-base font-semibold text-white">Global Brands</h4>
-              <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-                Original collections from leading global retail fashion houses and international apparel consignments.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-neutral-800/80 border border-neutral-700 flex items-center justify-center text-[#C5A880] shrink-0">
-              <Truck size={24} />
-            </div>
-            <div>
-              <h4 className="font-serif-luxury text-base font-semibold text-white">Rapid Nationwide Delivery</h4>
-              <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-                Flat ৳70 within Dhaka Metropolitan (24-48h) and ৳130 across all Bangladesh districts (48-72h).
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
 
         {/* Main Grid */}
@@ -81,11 +78,11 @@ export default function Footer({ onSelectCategory, onOpenAdmin, onOpenSizeGuide,
             </div>
             
             <p className="text-xs text-neutral-400 leading-relaxed max-w-sm">
-              Authentic pure export overstock garments from global fashion brands. Premium fabric, long-lasting construction, modern fits. Wear your story with confidence.
+              {settings?.footerDescription || 'Authentic 100% exported clothes from global fashion brands. Premium fabric, long-lasting construction, modern fits. Wear your story with confidence.'}
             </p>
 
             <div className="text-[11px] text-[#C5A880] font-medium tracking-wide">
-              Good Fit. Better Days.
+              {settings?.motto || 'Good Fit. Better Days.'}
             </div>
 
             <div className="flex items-center gap-3 pt-1">

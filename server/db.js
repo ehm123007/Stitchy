@@ -321,151 +321,22 @@ function initializeDB() {
     writeData(promoFile, defaultPromos);
   }
 
-  // 5. Orders (Seed a couple of realistic initial orders to showcase the admin dashboard right away)
+  // 5. Orders (Clean real orders list, no demo orders)
   const ordersFile = 'orders.json';
   if (!fs.existsSync(getFilePath(ordersFile))) {
-    const now = new Date();
-    const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-    const defaultOrders = [
-      {
-        id: 'ord_1',
-        referenceNo: 'STY-2026-4821',
-        createdAt: yesterday.toISOString(),
-        customer: {
-          name: 'Tanvir Ahmed',
-          phone: '01712-345678',
-          email: 'tanvir.ahmed@example.com',
-          address: 'House 42, Road 11, Sector 4, Uttara',
-          landmark: 'Near Sector 4 Park',
-          postalCode: '1230',
-          city: 'Dhaka',
-          deliveryZone: 'inside'
-        },
-        items: [
-          {
-            productId: 'prod_1',
-            title: 'Heavyweight Drop-Shoulder Oversized Tee',
-            price: 890,
-            quantity: 2,
-            size: 'L',
-            color: 'Vintage Ivory',
-            image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80'
-          }
-        ],
-        subtotal: 1780,
-        discount: 178,
-        promoCode: 'EXPORT10',
-        deliveryFee: 70,
-        total: 1672,
-        advancePaid: 70,
-        balanceDue: 1602,
-        paymentMethod: 'cod_advance', // COD with delivery charge prepaid
-        paymentProofScreenshot: '/uploads/bangla-qr-sample.svg',
-        transactionId: 'TXN982341BK',
-        status: 'Pending Verification',
-        adminNotes: 'Customer paid ৳70 delivery charge via bKash Bangla QR.',
-        emailSent: false,
-        verifiedAt: null
-      },
-      {
-        id: 'ord_2',
-        referenceNo: 'STY-2026-7719',
-        createdAt: new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString(),
-        customer: {
-          name: 'Nusrat Jahan',
-          phone: '01819-876543',
-          email: 'nusrat.jahan@example.com',
-          address: 'East Nasirabad, Block B, Road 3',
-          landmark: 'Opposite Khulshi Mart',
-          postalCode: '4000',
-          city: 'Chittagong',
-          deliveryZone: 'outside'
-        },
-        items: [
-          {
-            productId: 'prod_2',
-            title: 'Relaxed Vintage Flannel Overshirt',
-            price: 1390,
-            quantity: 1,
-            size: 'M',
-            color: 'Earthy Forest Plaid',
-            image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=900&q=80'
-          }
-        ],
-        subtotal: 1390,
-        discount: 0,
-        promoCode: null,
-        deliveryFee: 130,
-        total: 1520,
-        advancePaid: 1520,
-        balanceDue: 0,
-        paymentMethod: 'bangla_qr_full', // Full prepayment via Bangla QR
-        paymentProofScreenshot: '/uploads/bangla-qr-sample.svg',
-        transactionId: 'TXN771029NG',
-        status: 'Confirmed',
-        adminNotes: 'Full payment verified via Nagad Bangla QR. Dispatched via Steadfast Courier.',
-        emailSent: true,
-        verifiedAt: new Date(now.getTime() - 4 * 60 * 60 * 1000).toISOString()
-      }
-    ];
-    writeData(ordersFile, defaultOrders);
+    writeData(ordersFile, []);
   }
 
   // 6. Customers list
   const customersFile = 'customers.json';
   if (!fs.existsSync(getFilePath(customersFile))) {
-    const defaultCustomers = [
-      {
-        id: 'cust_1',
-        name: 'Tanvir Ahmed',
-        phone: '01712-345678',
-        email: 'tanvir.ahmed@example.com',
-        city: 'Dhaka',
-        address: 'House 42, Road 11, Sector 4, Uttara',
-        totalOrders: 1,
-        totalSpent: 1672,
-        lastOrderDate: new Date().toISOString()
-      },
-      {
-        id: 'cust_2',
-        name: 'Nusrat Jahan',
-        phone: '01819-876543',
-        email: 'nusrat.jahan@example.com',
-        city: 'Chittagong',
-        address: 'East Nasirabad, Block B, Road 3',
-        totalOrders: 1,
-        totalSpent: 1520,
-        lastOrderDate: new Date().toISOString()
-      }
-    ];
-    writeData(customersFile, defaultCustomers);
+    writeData(customersFile, []);
   }
 
   // 7. Inventory Logs
   const invLogsFile = 'inventory_logs.json';
   if (!fs.existsSync(getFilePath(invLogsFile))) {
-    writeData(invLogsFile, [
-      {
-        id: 'log_1',
-        productId: 'prod_1',
-        productTitle: 'Heavyweight Drop-Shoulder Oversized Tee',
-        type: 'initial_stock',
-        quantity: 41,
-        size: 'All',
-        reason: 'Initial export consignment arrival',
-        date: new Date(Date.now() - 3 * 86400000).toISOString()
-      },
-      {
-        id: 'log_2',
-        productId: 'prod_1',
-        productTitle: 'Heavyweight Drop-Shoulder Oversized Tee',
-        type: 'order_deduct',
-        quantity: -2,
-        size: 'L',
-        reason: 'Order #STY-2026-4821 checkout',
-        date: new Date(Date.now() - 86400000).toISOString()
-      }
-    ]);
+    writeData(invLogsFile, []);
   }
 
   // 8. Traffic & Device Tracking data

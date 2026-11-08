@@ -9,7 +9,10 @@ import { updateSettings, uploadBanglaQr, testEmailService } from '../../services
 export default function SettingsManager({ token, settings, onSettingsUpdated }) {
   const [formData, setFormData] = useState({
     storeName: settings?.storeName || 'STITCHY',
-    tagline: settings?.tagline || 'Pure Export Apparel & Overstock Collections',
+    motto: settings?.motto || 'MADE STITCH BY STITCH',
+    tagline: settings?.tagline || '100% Exported Clothes • Global Brands',
+    announcement: settings?.announcement || '✨ 100% Exported Clothes • 48-Hour Rapid Delivery Across Bangladesh',
+    footerDescription: settings?.footerDescription || 'Authentic 100% exported clothes from leading global brands. Premium fabric, long-lasting construction, modern fits. Wear your story with confidence.',
     banglaQrUrl: settings?.banglaQrUrl || '/uploads/bangla-qr.jpg',
     bkashNumber: settings?.bkashNumber || '01567-932733 (bKash Bangla QR)',
     nagadNumber: settings?.nagadNumber || '01567-932733 (Personal)',
@@ -17,7 +20,6 @@ export default function SettingsManager({ token, settings, onSettingsUpdated }) 
     bankInfo: settings?.bankInfo || 'All Bank Apps / bKash / Nagad / Rocket (Bangla QR Interoperable)',
     deliveryChargeInside: settings?.deliveryChargeInside || 70,
     deliveryChargeOutside: settings?.deliveryChargeOutside || 130,
-    announcement: settings?.announcement || '✨ 100% Pure Export Overstock Garments • 48-Hour Rapid Delivery Across Bangladesh',
     supportPhone: settings?.supportPhone || '+880 1875-413743',
     supportEmail: settings?.supportEmail || 'stitchy123007@gmail.com',
     whatsappUrl: settings?.whatsappUrl || 'https://api.whatsapp.com/send/?phone=8801875413743&text&type=phone_number&app_absent=0',
@@ -397,6 +399,73 @@ export default function SettingsManager({ token, settings, onSettingsUpdated }) 
                 value={formData.tiktokUrl}
                 onChange={handleInputChange}
                 className="w-full p-2.5 bg-[#FAF8F5] border border-[#D5CEC5] rounded-xl font-mono text-[11px]"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Store Brand Identity & Text Customization */}
+        <div className="bg-white p-6 rounded-2xl border border-[#E8E5DF] space-y-4 text-xs">
+          <h3 className="font-serif-luxury text-base font-bold text-neutral-900 flex items-center gap-2">
+            <Settings size={18} className="text-[#C5A880]" />
+            <span>Store Brand Identity, Mottos & Customer-Facing Texts</span>
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-bold text-neutral-800 uppercase mb-1">Store Name</label>
+              <input
+                type="text"
+                name="storeName"
+                value={formData.storeName}
+                onChange={handleInputChange}
+                className="w-full p-2.5 bg-[#FAF8F5] border border-[#D5CEC5] rounded-xl font-bold"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-neutral-800 uppercase mb-1">Official Brand Motto</label>
+              <input
+                type="text"
+                name="motto"
+                value={formData.motto}
+                onChange={handleInputChange}
+                placeholder="e.g. MADE STITCH BY STITCH"
+                className="w-full p-2.5 bg-[#FAF8F5] border border-[#D5CEC5] rounded-xl font-medium"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-neutral-800 uppercase mb-1">Catalog Tagline</label>
+              <input
+                type="text"
+                name="tagline"
+                value={formData.tagline}
+                onChange={handleInputChange}
+                placeholder="e.g. 100% Exported Clothes • Global Brands"
+                className="w-full p-2.5 bg-[#FAF8F5] border border-[#D5CEC5] rounded-xl font-medium"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-neutral-800 uppercase mb-1">Top Announcement Ticker</label>
+              <input
+                type="text"
+                name="announcement"
+                value={formData.announcement}
+                onChange={handleInputChange}
+                className="w-full p-2.5 bg-[#FAF8F5] border border-[#D5CEC5] rounded-xl font-medium"
+              />
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className="block font-bold text-neutral-800 uppercase mb-1">Footer Brand Mission / Description</label>
+              <textarea
+                rows={2}
+                name="footerDescription"
+                value={formData.footerDescription}
+                onChange={handleInputChange}
+                className="w-full p-2.5 bg-[#FAF8F5] border border-[#D5CEC5] rounded-xl leading-relaxed"
               />
             </div>
           </div>
