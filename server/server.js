@@ -1191,6 +1191,11 @@ app.get('/api/analytics', authenticateToken, (req, res) => {
   });
 });
 
+// Health check for Render / Cloud monitors
+app.get('/health', (req, res) => {
+  res.status(200).send('STITCHY OK');
+});
+
 // Production client serving
 const clientDist = path.join(__dirname, '..', 'client', 'dist');
 if (fs.existsSync(clientDist)) {
@@ -1198,9 +1203,13 @@ if (fs.existsSync(clientDist)) {
   app.use((req, res) => {
     res.sendFile(path.join(clientDist, 'index.html'));
   });
+} else {
+  app.get('/', (req, res) => {
+    res.send('STITCHY Storefront initializing... please refresh in a moment.');
+  });
 }
 
 // Start Server
-app.listen(PORT, () => {
-  console.log(`STITCHY Apparel Server listening on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`STITCHY Apparel Server listening on port ${PORT}`);
 });

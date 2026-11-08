@@ -3,7 +3,7 @@ node_modules/
 client/node_modules/
 
 # Production build output
-client/dist/
+# client/dist/ is tracked so cloud hosts (Render) can serve immediately without build issues
 
 # Environment and logs
 .env
