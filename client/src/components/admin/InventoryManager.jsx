@@ -18,6 +18,37 @@ const defaultSizeChart = {
   '3XL': { chest: '48-50"', length: '32"', sleeve: '11.5"' }
 };
 
+const categorySpecPresets = {
+  'T-Shirts & Tops': {
+    fabric: '100% Ring-Spun Combed Cotton',
+    gsm: '240 GSM (Dense & Structured)',
+    cut: 'Boxy Drop-Shoulder Relaxed Fit',
+    origin: 'Target Export to Europe / Scandinavia',
+    washCare: 'Machine wash cold, inside out. Tumble dry low.'
+  },
+  'Shirts & Flannels': {
+    fabric: '100% Brushed Cotton Twill',
+    gsm: '210 GSM (Yarn-Dyed Plaid)',
+    cut: 'Classic Overshirt / Relaxed Layering',
+    origin: 'US High-Street Global Brand',
+    washCare: 'Cold hand or machine wash.'
+  },
+  'Hoodies & Jackets': {
+    fabric: '85% Cotton, 15% Poly Fleece Anti-Pilling',
+    gsm: '380 GSM Ultra-Heavy',
+    cut: 'Tailored Streetwear Cut',
+    origin: 'Northern European Winter Export',
+    washCare: 'Gentle cycle, dry flat.'
+  },
+  'Pants & Bottoms': {
+    fabric: '55% French Linen, 45% Combed Cotton',
+    gsm: '180-220 GSM Breathable Twill',
+    cut: 'Relaxed Tapered Fit with Drawstring',
+    origin: 'Southern Europe Summer Export',
+    washCare: 'Machine wash cold.'
+  }
+};
+
 export default function InventoryManager({ token }) {
   const [products, setProducts] = useState([]);
   const [logs, setLogs] = useState([]);
@@ -57,10 +88,19 @@ export default function InventoryManager({ token }) {
   }, [searchQuery, token]);
 
   const handleOpenAddModal = () => {
+    const initialCategory = 'T-Shirts & Tops';
+    const initialSpecs = categorySpecPresets[initialCategory] || {
+      fabric: '100% Ring-Spun Combed Cotton',
+      gsm: '240 GSM (Dense & Structured)',
+      cut: 'Boxy Drop-Shoulder Relaxed Fit',
+      origin: 'Target Export to Europe / Scandinavia',
+      washCare: 'Machine wash cold, inside out. Tumble dry low.'
+    };
+
     setEditingProduct({
       title: '',
       subtitle: '100% Exported Clothes',
-      category: 'T-Shirts & Tops',
+      category: initialCategory,
       price: '',
       originalPrice: '',
       badge: 'Global Brand',
@@ -75,13 +115,8 @@ export default function InventoryManager({ token }) {
         { size: '3XL', stock: 5 }
       ],
       images: ['https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80'],
-      description: 'Crafted with heavyweight 240+ GSM pure export combed cotton.',
-      specs: {
-        fabric: '100% Combed Ring-Spun Cotton',
-        gsm: '240 GSM',
-        cut: 'Relaxed Streetwear Comfort Fit',
-        origin: 'Target Export to Europe'
-      },
+      description: 'Crafted with heavyweight 240+ GSM pure export combed cotton from global retail brands.',
+      specs: { ...initialSpecs },
       sizeChart: { ...defaultSizeChart },
       featured: false
     });
@@ -92,6 +127,13 @@ export default function InventoryManager({ token }) {
     setEditingProduct({
       ...prod,
       colors: Array.isArray(prod.colors) ? prod.colors.join(', ') : prod.colors,
+      specs: {
+        fabric: prod.specs?.fabric || '',
+        gsm: prod.specs?.gsm || '',
+        cut: prod.specs?.cut || '',
+        origin: prod.specs?.origin || '',
+        washCare: prod.specs?.washCare || ''
+      },
       sizeChart: prod.sizeChart || { ...defaultSizeChart }
     });
     setIsModalOpen(true);
@@ -104,6 +146,13 @@ export default function InventoryManager({ token }) {
         ...editingProduct,
         price: Number(editingProduct.price),
         originalPrice: Number(editingProduct.originalPrice || editingProduct.price),
+        specs: {
+          fabric: editingProduct.specs?.fabric || '100% Export Grade Cotton',
+          gsm: editingProduct.specs?.gsm || '240 GSM',
+          cut: editingProduct.specs?.cut || 'Modern Comfort Fit',
+          origin: editingProduct.specs?.origin || 'Global Brand Consignment',
+          washCare: editingProduct.specs?.washCare || 'Machine wash cold'
+        },
         colors: typeof editingProduct.colors === 'string'
           ? editingProduct.colors.split(',').map((c) => c.trim()).filter(Boolean)
           : editingProduct.colors
@@ -325,6 +374,28 @@ export default function InventoryManager({ token }) {
                           ))}
                         </div>
                       </div>
+
+                      {/* Garment Specifications Preview */}
+                      {prod.specs && (
+                        <div className="grid grid-cols-2 gap-1.5 text-[10px] bg-white p-2.5 rounded-xl border border-[#E8E5DF]">
+                          <div>
+                            <span className="text-neutral-400 block font-bold uppercase text-[9px]">Fabric</span>
+                            <span className="font-semibold text-neutral-800 line-clamp-1">{prod.specs.fabric || '—'}</span>
+                          </div>
+                          <div>
+                            <span className="text-neutral-400 block font-bold uppercase text-[9px]">Density / GSM</span>
+                            <span className="font-semibold text-neutral-800 line-clamp-1 font-mono">{prod.specs.gsm || '—'}</span>
+                          </div>
+                          <div>
+                            <span className="text-neutral-400 block font-bold uppercase text-[9px]">Cut / Fit</span>
+                            <span className="font-semibold text-neutral-800 line-clamp-1">{prod.specs.cut || '—'}</span>
+                          </div>
+                          <div>
+                            <span className="text-neutral-400 block font-bold uppercase text-[9px]">Export To</span>
+                            <span className="font-semibold text-[#8C7A6B] line-clamp-1">{prod.specs.origin || '—'}</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -573,17 +644,58 @@ export default function InventoryManager({ token }) {
                 </div>
 
                 <div>
-                  <label className="block font-bold text-neutral-800 uppercase mb-1">Category *</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block font-bold text-neutral-800 uppercase">Category *</label>
+                    {categorySpecPresets[editingProduct.category] && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const preset = categorySpecPresets[editingProduct.category];
+                          setEditingProduct(p => ({
+                            ...p,
+                            specs: { ...(p.specs || {}), ...preset }
+                          }));
+                        }}
+                        className="text-[10px] text-[#8C7A6B] hover:text-black font-bold underline"
+                        title="Auto-fill recommended specs for this category"
+                      >
+                        ⚡ Apply Category Specs
+                      </button>
+                    )}
+                  </div>
                   <select
-                    value={editingProduct.category}
-                    onChange={(e) => setEditingProduct((p) => ({ ...p, category: e.target.value }))}
-                    className="w-full p-2.5 bg-[#FAF8F5] border border-[#D5CEC5] rounded-xl"
+                    value={['T-Shirts & Tops', 'Shirts & Flannels', 'Hoodies & Jackets', 'Pants & Bottoms'].includes(editingProduct.category) ? editingProduct.category : 'Custom'}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === 'Custom') {
+                        setEditingProduct(p => ({ ...p, category: '' }));
+                      } else {
+                        const preset = categorySpecPresets[val] || {};
+                        setEditingProduct(p => ({
+                          ...p,
+                          category: val,
+                          specs: { ...(p.specs || {}), ...preset }
+                        }));
+                      }
+                    }}
+                    className="w-full p-2.5 bg-[#FAF8F5] border border-[#D5CEC5] rounded-xl font-medium"
                   >
                     <option value="T-Shirts & Tops">T-Shirts & Tops</option>
                     <option value="Shirts & Flannels">Shirts & Flannels</option>
                     <option value="Hoodies & Jackets">Hoodies & Jackets</option>
                     <option value="Pants & Bottoms">Pants & Bottoms</option>
+                    <option value="Custom">+ Custom Category...</option>
                   </select>
+                  {!['T-Shirts & Tops', 'Shirts & Flannels', 'Hoodies & Jackets', 'Pants & Bottoms'].includes(editingProduct.category) && (
+                    <input
+                      type="text"
+                      required
+                      value={editingProduct.category}
+                      onChange={(e) => setEditingProduct(p => ({ ...p, category: e.target.value }))}
+                      placeholder="Type custom category name..."
+                      className="w-full mt-2 p-2 bg-white border border-[#D5CEC5] rounded-xl text-xs"
+                    />
+                  )}
                 </div>
 
                 <div>
@@ -660,6 +772,189 @@ export default function InventoryManager({ token }) {
                         />
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                {/* Garment Specifications: Fabric, Density GSM, Cut/Fit, Export To */}
+                <div className="sm:col-span-2 space-y-3 bg-[#FAF8F5] p-4 sm:p-5 rounded-2xl border border-[#D5CEC5]">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-[#E8E5DF] pb-2.5">
+                    <div>
+                      <span className="font-bold text-neutral-900 uppercase block text-xs flex items-center gap-1.5">
+                        🧵 Garment Specifications (Customer Viewable):
+                      </span>
+                      <span className="text-[11px] text-neutral-500">
+                        Shown to customers in the product details modal (Fabric, GSM, Fit, and Export destination).
+                      </span>
+                    </div>
+                    {categorySpecPresets[editingProduct.category] && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const preset = categorySpecPresets[editingProduct.category];
+                          setEditingProduct(p => ({
+                            ...p,
+                            specs: { ...(p.specs || {}), ...preset }
+                          }));
+                        }}
+                        className="text-[11px] font-bold text-[#8C7A6B] hover:text-black underline shrink-0"
+                      >
+                        Reset to {editingProduct.category} Defaults
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+                    {/* Fabric / Material */}
+                    <div>
+                      <label className="block font-bold text-neutral-800 uppercase text-[11px] mb-1">
+                        Fabric / Material *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={editingProduct.specs?.fabric || ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setEditingProduct((p) => ({
+                            ...p,
+                            specs: { ...(p.specs || {}), fabric: val }
+                          }));
+                        }}
+                        placeholder="e.g. 100% Ring-Spun Combed Cotton"
+                        className="w-full p-2.5 bg-white border border-[#D5CEC5] rounded-xl text-xs font-medium"
+                      />
+                      <div className="flex flex-wrap gap-1 mt-1.5">
+                        {['100% Combed Cotton', 'Brushed Cotton Twill', 'Cotton-Poly Fleece', 'Linen-Cotton Blend', 'Peached Cotton Shell'].map((f) => (
+                          <button
+                            key={f}
+                            type="button"
+                            onClick={() => setEditingProduct((p) => ({ ...p, specs: { ...(p.specs || {}), fabric: f } }))}
+                            className="text-[9px] px-2 py-0.5 bg-white hover:bg-neutral-900 hover:text-white text-neutral-700 rounded-md border border-[#D5CEC5] transition-colors"
+                          >
+                            + {f}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Density / GSM */}
+                    <div>
+                      <label className="block font-bold text-neutral-800 uppercase text-[11px] mb-1">
+                        Density / GSM *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={editingProduct.specs?.gsm || ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setEditingProduct((p) => ({
+                            ...p,
+                            specs: { ...(p.specs || {}), gsm: val }
+                          }));
+                        }}
+                        placeholder="e.g. 240 GSM (Dense & Structured)"
+                        className="w-full p-2.5 bg-white border border-[#D5CEC5] rounded-xl text-xs font-mono font-bold text-neutral-900"
+                      />
+                      <div className="flex flex-wrap gap-1 mt-1.5">
+                        {['180 GSM (Lightweight)', '210 GSM', '240 GSM (Heavyweight)', '280 GSM', '380 GSM Ultra-Heavy'].map((g) => (
+                          <button
+                            key={g}
+                            type="button"
+                            onClick={() => setEditingProduct((p) => ({ ...p, specs: { ...(p.specs || {}), gsm: g } }))}
+                            className="text-[9px] px-2 py-0.5 bg-white hover:bg-neutral-900 hover:text-white text-neutral-700 rounded-md border border-[#D5CEC5] transition-colors"
+                          >
+                            + {g}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Cut / Fit */}
+                    <div>
+                      <label className="block font-bold text-neutral-800 uppercase text-[11px] mb-1">
+                        Cut / Fit *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={editingProduct.specs?.cut || ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setEditingProduct((p) => ({
+                            ...p,
+                            specs: { ...(p.specs || {}), cut: val }
+                          }));
+                        }}
+                        placeholder="e.g. Boxy Drop-Shoulder Relaxed Fit"
+                        className="w-full p-2.5 bg-white border border-[#D5CEC5] rounded-xl text-xs font-medium"
+                      />
+                      <div className="flex flex-wrap gap-1 mt-1.5">
+                        {['Boxy Drop-Shoulder', 'Classic Overshirt Fit', 'Tailored Streetwear Cut', 'Relaxed Tapered Fit', 'Regular Smart-Casual'].map((c) => (
+                          <button
+                            key={c}
+                            type="button"
+                            onClick={() => setEditingProduct((p) => ({ ...p, specs: { ...(p.specs || {}), cut: c } }))}
+                            className="text-[9px] px-2 py-0.5 bg-white hover:bg-neutral-900 hover:text-white text-neutral-700 rounded-md border border-[#D5CEC5] transition-colors"
+                          >
+                            + {c}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Export To / Origin */}
+                    <div>
+                      <label className="block font-bold text-neutral-800 uppercase text-[11px] mb-1">
+                        Export To / Origin Destination *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={editingProduct.specs?.origin || ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setEditingProduct((p) => ({
+                            ...p,
+                            specs: { ...(p.specs || {}), origin: val }
+                          }));
+                        }}
+                        placeholder="e.g. Target Export to Scandinavia / Germany"
+                        className="w-full p-2.5 bg-white border border-[#D5CEC5] rounded-xl text-xs font-medium"
+                      />
+                      <div className="flex flex-wrap gap-1 mt-1.5">
+                        {['Target Export to Europe / Scandinavia', 'US High-Street Global Brand', 'UK / British Heritage Brand', 'Southern Europe Summer Export'].map((o) => (
+                          <button
+                            key={o}
+                            type="button"
+                            onClick={() => setEditingProduct((p) => ({ ...p, specs: { ...(p.specs || {}), origin: o } }))}
+                            className="text-[9px] px-2 py-0.5 bg-white hover:bg-neutral-900 hover:text-white text-neutral-700 rounded-md border border-[#D5CEC5] transition-colors"
+                          >
+                            + {o}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Wash Care Instructions */}
+                    <div className="sm:col-span-2">
+                      <label className="block font-bold text-neutral-800 uppercase text-[11px] mb-1">
+                        Wash Care Instructions (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={editingProduct.specs?.washCare || ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setEditingProduct((p) => ({
+                            ...p,
+                            specs: { ...(p.specs || {}), washCare: val }
+                          }));
+                        }}
+                        placeholder="e.g. Machine wash cold, inside out. Tumble dry low."
+                        className="w-full p-2.5 bg-white border border-[#D5CEC5] rounded-xl text-xs"
+                      />
+                    </div>
                   </div>
                 </div>
 

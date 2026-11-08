@@ -294,10 +294,17 @@ app.post('/api/products', authenticateToken, (req, res) => {
       'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80'
     ],
     description: description || 'Premium export standard clothing made with highest GSM and stitching quality.',
-    specs: specs || {
+    specs: specs ? {
+      fabric: specs.fabric || '100% Export Grade Cotton',
+      gsm: specs.gsm || '240 GSM',
+      cut: specs.cut || 'Modern Comfort Fit',
+      origin: specs.origin || 'European Export Consignment',
+      washCare: specs.washCare || 'Machine wash cold'
+    } : {
       fabric: '100% Export Grade Cotton',
-      gsm: '220 GSM',
+      gsm: '240 GSM',
       cut: 'Modern Comfort Fit',
+      origin: 'European Export Consignment',
       washCare: 'Machine wash cold'
     },
     sizeChart: req.body.sizeChart || null,
