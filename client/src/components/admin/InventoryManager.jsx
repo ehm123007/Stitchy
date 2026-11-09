@@ -7,6 +7,7 @@ import {
   getProducts, createProduct, updateProduct, deleteProduct, 
   adjustStock, getInventoryLogs, uploadProductImage, clearAllProducts 
 } from '../../services/api';
+import { compressImageToBase64 } from '../../utils/imageCompressor';
 
 const defaultSizeChart = {
   'XS': { chest: '36-38"', length: '26"', sleeve: '8.5"' },
@@ -206,13 +207,23 @@ export default function InventoryManager({ token }) {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
-      const res = await uploadProductImage(file, token);
+      // First compress into ultra-optimized persistent Base64 Data URL (immune to ephemeral disk resets)
+      const base64Url = await compressImageToBase64(file, 1200, 1200, 0.82);
       setEditingProduct((prev) => ({
         ...prev,
-        images: [res.url, ...(prev.images || [])]
+        images: [base64Url, ...(prev.images || [])]
       }));
     } catch (err) {
-      alert('Failed to upload image');
+      console.warn('Base64 compression fallback to server upload:', err);
+      try {
+        const res = await uploadProductImage(file, token);
+        setEditingProduct((prev) => ({
+          ...prev,
+          images: [res.url, ...(prev.images || [])]
+        }));
+      } catch (uploadErr) {
+        alert('Failed to upload image: ' + uploadErr.message);
+      }
     }
   };
 
@@ -287,7 +298,27 @@ export default function InventoryManager({ token }) {
 
           {/* Products Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {products.map((prod) => {
+            {products.length === 0 ? (
+              <div className="col-span-full bg-white rounded-2xl border border-dashed border-[#D5CEC5] p-12 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#FAF8F5] flex items-center justify-center text-neutral-400">
+                  <Sparkles size={28} className="text-[#C5A880]" />
+                </div>
+                <h3 className="font-serif-luxury text-lg font-bold text-neutral-900 mb-1">
+                  Your Catalog is Ready for Your Products
+                </h3>
+                <p className="text-xs text-neutral-500 max-w-md mx-auto mb-6">
+                  All sample items have been removed. Click below to add your genuine clothing items or restore from a backup file.
+                </p>
+                <button
+                  onClick={handleOpenAddModal}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-neutral-900 text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-neutral-800 transition-all shadow-md"
+                >
+                  <Plus size={16} />
+                  <span>Add First Product</span>
+                </button>
+              </div>
+            ) : (
+              products.map((prod) => {
               const isOut = prod.totalStock <= 0;
               const isLow = prod.totalStock > 0 && prod.totalStock <= 5;
 
@@ -438,7 +469,7 @@ export default function InventoryManager({ token }) {
 
                 </div>
               );
-            })}
+            }))}
           </div>
         </>
       ) : (

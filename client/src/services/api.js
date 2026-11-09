@@ -377,3 +377,35 @@ export async function updateGoogleAds(data, token) {
   if (!res.ok) throw new Error('Failed to update Google Ads');
   return res.json();
 }
+
+export async function getSystemStatus() {
+  try {
+    const res = await fetch(`${API_BASE}/system/status`);
+    if (!res.ok) return { mongoConnected: false, storageMode: 'ephemeral_disk' };
+    return res.json();
+  } catch (e) {
+    return { mongoConnected: false, storageMode: 'ephemeral_disk' };
+  }
+}
+
+export async function downloadStoreBackup(token) {
+  const res = await fetch(`${API_BASE}/backup/export`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  if (!res.ok) throw new Error('Failed to generate store backup');
+  return res.json();
+}
+
+export async function restoreStoreBackup(backupData, token) {
+  const res = await fetch(`${API_BASE}/backup/import`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(backupData)
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to restore store backup');
+  return data;
+}

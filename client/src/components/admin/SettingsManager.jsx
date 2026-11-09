@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Settings, QrCode, Upload, Save, CheckCircle2, Phone, 
   Mail, AlertCircle, MessageCircle, Send, Key, ExternalLink,
-  HardDrive, FileSpreadsheet
+  HardDrive, FileSpreadsheet, Database, Download, Sparkles
 } from 'lucide-react';
-import { updateSettings, uploadBanglaQr, testEmailService } from '../../services/api';
+import { 
+  updateSettings, uploadBanglaQr, testEmailService, 
+  getSystemStatus, downloadStoreBackup, restoreStoreBackup 
+} from '../../services/api';
+import { compressImageToBase64 } from '../../utils/imageCompressor';
 
 export default function SettingsManager({ token, settings, onSettingsUpdated }) {
   const [formData, setFormData] = useState({
@@ -37,6 +41,14 @@ export default function SettingsManager({ token, settings, onSettingsUpdated }) 
   const [qrUploading, setQrUploading] = useState(false);
   const [testingEmail, setTestingEmail] = useState(false);
   const [testResult, setTestResult] = useState('');
+  const [systemStatus, setSystemStatus] = useState({ mongoConnected: false, storageMode: 'ephemeral_disk' });
+  const [backupDownloading, setBackupDownloading] = useState(false);
+  const [backupRestoring, setBackupRestoring] = useState(false);
+  const [backupStatusMsg, setBackupStatusMsg] = useState('');
+
+  useEffect(() => {
+    getSystemStatus().then(setSystemStatus).catch(() => {});
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,13 +76,71 @@ export default function SettingsManager({ token, settings, onSettingsUpdated }) 
     if (!file) return;
     setQrUploading(true);
     try {
-      const res = await uploadBanglaQr(file, token);
-      setFormData((prev) => ({ ...prev, banglaQrUrl: res.banglaQrUrl }));
-      alert('Bangla QR image uploaded successfully!');
+      const base64 = await compressImageToBase64(file, 800, 800, 0.88);
+      setFormData((prev) => ({ ...prev, banglaQrUrl: base64 }));
+      alert('Bangla QR image uploaded and saved into store settings!');
     } catch (err) {
-      alert('Failed to upload QR code');
+      try {
+        const res = await uploadBanglaQr(file, token);
+        setFormData((prev) => ({ ...prev, banglaQrUrl: res.banglaQrUrl }));
+        alert('Bangla QR image uploaded successfully!');
+      } catch (uploadErr) {
+        alert('Failed to upload QR code: ' + uploadErr.message);
+      }
     } finally {
       setQrUploading(false);
+    }
+  };
+
+  const handleDownloadBackup = async () => {
+    setBackupDownloading(true);
+    setBackupStatusMsg('');
+    try {
+      const data = await downloadStoreBackup(token);
+      const jsonStr = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const dateStr = new Date().toISOString().split('T')[0];
+      link.href = url;
+      link.download = `stitchy_store_backup_${dateStr}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      setBackupStatusMsg('✅ Full store backup JSON file downloaded successfully!');
+      setTimeout(() => setBackupStatusMsg(''), 4000);
+    } catch (err) {
+      alert('Failed to download backup: ' + err.message);
+    } finally {
+      setBackupDownloading(false);
+    }
+  };
+
+  const handleRestoreBackup = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!window.confirm('Are you sure you want to restore the store from this backup file? This will update your catalog, settings, and orders.')) {
+      e.target.value = '';
+      return;
+    }
+    setBackupRestoring(true);
+    setBackupStatusMsg('');
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      const res = await restoreStoreBackup(parsed, token);
+      setBackupStatusMsg(`✅ ${res.message || 'Store successfully restored!'}`);
+      if (parsed.settings) {
+        setFormData((prev) => ({ ...prev, ...parsed.settings }));
+        if (onSettingsUpdated) onSettingsUpdated(parsed.settings);
+      }
+      setTimeout(() => window.location.reload(), 1500);
+    } catch (err) {
+      alert('Failed to restore backup: ' + err.message);
+    } finally {
+      setBackupRestoring(false);
+      e.target.value = '';
     }
   };
 
@@ -107,6 +177,100 @@ export default function SettingsManager({ token, settings, onSettingsUpdated }) 
           <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
             <CheckCircle2 size={14} />
             <span>Settings Saved!</span>
+          </div>
+        )}
+      </div>
+
+      {/* Cloud Database Persistence & Store Backup Card */}
+      <div className="bg-white p-6 rounded-2xl border border-[#E8E5DF] space-y-4 text-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <h3 className="font-serif-luxury text-base font-bold text-neutral-900 flex items-center gap-2">
+            <Database size={18} className="text-[#C5A880]" />
+            <span>Cloud Database Persistence & Store Backup</span>
+          </h3>
+
+          {/* Live Status Badge */}
+          <div className="flex items-center gap-2">
+            {systemStatus.mongoConnected ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                MongoDB Atlas Connected (100% Persistent)
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                Running in Ephemeral Host Mode
+              </span>
+            )}
+          </div>
+        </div>
+
+        <p className="text-neutral-600 leading-relaxed">
+          {systemStatus.mongoConnected ? (
+            <>
+              ✅ Your store is connected to <b>MongoDB Atlas</b>. All products, prices, images, and orders are permanently preserved in the cloud and will <b>never</b> be lost when Render restarts or sleeps.
+            </>
+          ) : (
+            <>
+              ⚠️ Render Free Tier runs in ephemeral containers that restart from GitHub when idle. To make all your products, pricing, and images permanent forever, connect a free <b>MongoDB Atlas</b> database (512MB free, no credit card).
+            </>
+          )}
+        </p>
+
+        {!systemStatus.mongoConnected && (
+          <div className="p-4 bg-[#FAF8F5] rounded-xl border border-[#E8E5DF] space-y-2">
+            <div className="font-bold text-neutral-900 flex items-center gap-1.5">
+              <Sparkles size={14} className="text-[#C5A880]" />
+              <span>How to connect Free MongoDB Atlas in 2 minutes:</span>
+            </div>
+            <ol className="list-decimal list-inside space-y-1.5 text-[11px] text-neutral-600 pl-1">
+              <li>Sign up for free at <a href="https://www.mongodb.com/cloud/atlas/register" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold underline">mongodb.com/atlas</a> and choose the <b>M0 Free Cluster</b>.</li>
+              <li>Under <b>Database Access</b>, add a database user & password.</li>
+              <li>Under <b>Network Access</b>, click <i>Add IP Address</i> &gt; <i>Allow Access from Anywhere (0.0.0.0/0)</i>.</li>
+              <li>Click <b>Connect &gt; Drivers</b> and copy your connection string (e.g. <code className="bg-white px-1.5 py-0.5 border rounded font-mono text-[10px]">mongodb+srv://user:pass@cluster.mongodb.net/stitchy</code>).</li>
+              <li>In your <b>Render Dashboard &gt; Stitchy Service &gt; Environment</b>, add <code className="bg-white px-1.5 py-0.5 border rounded font-mono font-bold text-neutral-900">MONGODB_URI</code> = your connection string. Done! Everything persists forever!</li>
+            </ol>
+          </div>
+        )}
+
+        {/* Backup & Restore Controls */}
+        <div className="pt-2 border-t border-[#F0ECE6] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="font-bold text-neutral-900">One-Click Store Backup & Restore</div>
+            <div className="text-[11px] text-neutral-500">
+              Download a complete JSON snapshot of all your products, prices, images, and settings to your computer.
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={handleDownloadBackup}
+              disabled={backupDownloading}
+              className="px-4 py-2.5 bg-neutral-900 text-white rounded-xl font-bold uppercase tracking-wider hover:bg-neutral-800 transition-all flex items-center gap-2 shadow-sm disabled:opacity-50 text-[11px]"
+            >
+              <Download size={14} className="text-[#C5A880]" />
+              <span>{backupDownloading ? 'Exporting...' : '📥 Download Backup (JSON)'}</span>
+            </button>
+
+            <label className="px-4 py-2.5 bg-[#FAF8F5] hover:bg-[#F2EFE9] text-neutral-800 font-bold uppercase tracking-wider border border-[#D5CEC5] rounded-xl flex items-center gap-2 cursor-pointer transition-all shadow-2xs text-[11px]">
+              <Upload size={14} className="text-neutral-600" />
+              <span>{backupRestoring ? 'Restoring...' : '📤 Restore Store from File'}</span>
+              <input
+                type="file"
+                accept=".json,application/json"
+                onChange={handleRestoreBackup}
+                disabled={backupRestoring}
+                className="hidden"
+              />
+            </label>
+          </div>
+        </div>
+
+        {backupStatusMsg && (
+          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-[11px] font-bold flex items-center gap-2">
+            <CheckCircle2 size={14} />
+            <span>{backupStatusMsg}</span>
           </div>
         )}
       </div>

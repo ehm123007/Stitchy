@@ -1,17 +1,35 @@
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
 
 const DATA_DIR = path.join(__dirname, 'data');
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
+// In-memory cache for ultra-fast, synchronous readData operations
+const memoryStore = new Map();
+
+// Schema for cloud document storage in MongoDB Atlas
+const StoreDocumentSchema = new mongoose.Schema({
+  key: { type: String, required: true, unique: true },
+  data: { type: mongoose.Schema.Types.Mixed, required: true },
+  updatedAt: { type: Date, default: Date.now }
+});
+
+let StoreDocument = null;
+let isMongoConnected = false;
+
 function getFilePath(file) {
   return path.join(DATA_DIR, file);
 }
 
+// Dual-mode read: in-memory first, local file second
 function readData(file, defaultVal = []) {
+  if (memoryStore.has(file)) {
+    return memoryStore.get(file);
+  }
   const fp = getFilePath(file);
   if (!fs.existsSync(fp)) {
     writeData(file, defaultVal);
@@ -19,28 +37,125 @@ function readData(file, defaultVal = []) {
   }
   try {
     const raw = fs.readFileSync(fp, 'utf8');
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    memoryStore.set(file, parsed);
+    return parsed;
   } catch (err) {
     console.error(`Error reading ${file}:`, err);
     return defaultVal;
   }
 }
 
+// Dual-mode write: memory + local file + cloud MongoDB Atlas (if connected)
 function writeData(file, data) {
-  const fp = getFilePath(file);
-  const temp = `${fp}.tmp`;
-  fs.writeFileSync(temp, JSON.stringify(data, null, 2), 'utf8');
-  fs.renameSync(temp, fp);
+  // 1. Update in-memory store
+  memoryStore.set(file, data);
+
+  // 2. Update local disk file (atomic safe write)
+  try {
+    const fp = getFilePath(file);
+    const temp = `${fp}.tmp`;
+    fs.writeFileSync(temp, JSON.stringify(data, null, 2), 'utf8');
+    fs.renameSync(temp, fp);
+  } catch (err) {
+    console.error(`Error writing local file ${file}:`, err.message);
+  }
+
+  // 3. Persist to MongoDB Atlas if connected
+  if (isMongoConnected && StoreDocument) {
+    StoreDocument.findOneAndUpdate(
+      { key: file },
+      { key: file, data, updatedAt: new Date() },
+      { upsert: true, new: true }
+    ).catch((err) => {
+      console.error(`[DB] Error saving ${file} to MongoDB:`, err.message);
+    });
+  }
+}
+
+// Synchronize all collections from MongoDB Atlas
+async function syncFromMongo() {
+  if (!isMongoConnected || !StoreDocument) return;
+  try {
+    const docs = await StoreDocument.find({});
+    if (docs.length === 0) {
+      console.log('ℹ️ [DB] MongoDB is empty. Seeding MongoDB with current store data...');
+      const seedFiles = [
+        'settings.json',
+        'products.json',
+        'orders.json',
+        'users.json',
+        'promo_codes.json',
+        'customers.json',
+        'inventory_logs.json',
+        'traffic.json'
+      ];
+      for (const f of seedFiles) {
+        const fp = getFilePath(f);
+        if (fs.existsSync(fp)) {
+          try {
+            const data = JSON.parse(fs.readFileSync(fp, 'utf8'));
+            await StoreDocument.create({ key: f, data, updatedAt: new Date() });
+            memoryStore.set(f, data);
+          } catch (e) {
+            console.error(`Error seeding ${f} to MongoDB:`, e.message);
+          }
+        }
+      }
+      console.log('✅ [DB] Initial seed to MongoDB completed successfully.');
+      return;
+    }
+
+    // Hydrate memory cache & local files from MongoDB Atlas
+    for (const doc of docs) {
+      memoryStore.set(doc.key, doc.data);
+      try {
+        const fp = getFilePath(doc.key);
+        fs.writeFileSync(fp, JSON.stringify(doc.data, null, 2), 'utf8');
+      } catch (e) {
+        // Safe fail for read-only environments
+      }
+    }
+    console.log(`✅ [DB] Loaded ${docs.length} persistent store collections from MongoDB Atlas.`);
+  } catch (err) {
+    console.error('❌ [DB] Error during MongoDB sync:', err.message);
+  }
+}
+
+// Connect to MongoDB Atlas (called at server boot)
+async function connectDB() {
+  const uri = process.env.MONGODB_URI || process.env.MONGO_URI;
+  if (!uri) {
+    console.log('ℹ️ [DB] No MONGODB_URI found in environment. Running in local file-system mode.');
+    return;
+  }
+
+  try {
+    console.log('🔄 [DB] Connecting to MongoDB Atlas cloud database...');
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 10000
+    });
+    isMongoConnected = true;
+    StoreDocument = mongoose.model('StoreDocument', StoreDocumentSchema);
+    console.log('✅ [DB] Connected to MongoDB Atlas! All products, prices, and orders are 100% cloud persistent.');
+    await syncFromMongo();
+  } catch (err) {
+    console.error('❌ [DB] Failed to connect to MongoDB Atlas:', err.message);
+    console.log('⚠️ [DB] Continuing with local file storage.');
+  }
 }
 
 // Initial Seeding
 function initializeDB() {
-  // 1. Settings
+  // 1. Settings (Stitchy official brand defaults)
   const settingsFile = 'settings.json';
   if (!fs.existsSync(getFilePath(settingsFile))) {
     const defaultSettings = {
       storeName: 'STITCHY',
-      tagline: 'Pure Export Apparel & Overstock Collections',
+      motto: 'MADE STITCH BY STITCH',
+      tagline: '100% Exported Clothes • Global Brands',
+      logoUrl: '/uploads/logo.jpg',
+      coverUrl: '/cover.jpg',
       banglaQrUrl: '/uploads/bangla-qr.jpg',
       bkashNumber: '01567-932733 (bKash Bangla QR)',
       nagadNumber: '01567-932733 (Personal)',
@@ -48,12 +163,42 @@ function initializeDB() {
       bankInfo: 'All Bank Apps / bKash / Nagad / Rocket (Bangla QR Interoperable)',
       deliveryChargeInside: 70,
       deliveryChargeOutside: 130,
-      announcement: '✨ 100% Pure Export Overstock Garments • 48-Hour Rapid Delivery Across Bangladesh',
-      supportPhone: '+880 1567-932733',
-      supportEmail: 'orders@stitchy.com',
-      facebookUrl: 'https://facebook.com/stitchyexport',
-      instagramUrl: 'https://instagram.com/stitchy.apparel',
-      tiktokUrl: 'https://tiktok.com/@stitchyexport'
+      announcement: '✨ 100% Exported Clothes • 48-Hour Rapid Delivery Across Bangladesh',
+      footerDescription: 'Authentic 100% exported clothes from leading global brands. Premium fabric, long-lasting construction, modern fits. Wear your story with confidence.',
+      valuePillars: [
+        {
+          id: 'vp1',
+          icon: 'ShieldCheck',
+          title: '100% Exported Clothes',
+          description: 'Authentic export consignments crafted from 240+ GSM organic combed cotton, double-stitched for enduring wear.'
+        },
+        {
+          id: 'vp2',
+          icon: 'Globe',
+          title: 'Global Brands',
+          description: 'Original collections from leading global retail fashion houses and international apparel consignments.'
+        },
+        {
+          id: 'vp3',
+          icon: 'Truck',
+          title: 'Rapid Nationwide Delivery',
+          description: 'Flat ৳70 within Dhaka Metropolitan (24-48h) and ৳130 across all Bangladesh districts (48-72h).'
+        }
+      ],
+      supportPhone: '+880 1875-413743',
+      supportEmail: 'stitchy123007@gmail.com',
+      whatsappUrl: 'https://api.whatsapp.com/send/?phone=8801875413743&text&type=phone_number&app_absent=0',
+      whatsappNumber: '+8801875413743',
+      facebookUrl: 'https://www.facebook.com/share/1FMAwBBf6Y/',
+      instagramUrl: 'https://www.instagram.com/_stit_chy_?srtk=b2hmbXRhNW5leTQz',
+      tiktokUrl: 'https://www.tiktok.com/@stitchy710?_r=1&_t=ZS-9BEHb2NGgnV',
+      gmailUser: 'stitchy123007@gmail.com',
+      gmailAppPassword: '',
+      googleAdsId: 'AW-11598234-STITCHY',
+      googleAdsActive: true,
+      googleAdsBudget: '৳500 / day',
+      googleDriveFolderUrl: 'https://drive.google.com/drive/folders/1StitchyExportReceiptsBackup',
+      googleServicesEnabled: true
     };
     writeData(settingsFile, defaultSettings);
   }
@@ -74,207 +219,20 @@ function initializeDB() {
       },
       {
         id: 'usr_2',
-        name: 'Order Manager',
-        email: 'team@stitchy.com',
+        name: 'Stitchy Admin',
+        email: 'stitchy123007@gmail.com',
         passwordHash: hash,
-        role: 'Operations & Dispatch',
+        role: 'Super Admin',
         createdAt: new Date().toISOString()
       }
     ];
     writeData(usersFile, defaultUsers);
   }
 
-  // 3. Products
+  // 3. Products: default to empty array [] so fake demo products NEVER auto-populate
   const productsFile = 'products.json';
   if (!fs.existsSync(getFilePath(productsFile))) {
-    const defaultProducts = [
-      {
-        id: 'prod_1',
-        title: 'Heavyweight Drop-Shoulder Oversized Tee',
-        subtitle: 'European Export Surplus • 240 GSM Organic Combed Cotton',
-        category: 'T-Shirts & Tops',
-        price: 890,
-        originalPrice: 1250,
-        badge: 'Export Bestseller',
-        colors: ['Washed Charcoal', 'Vintage Ivory', 'Sage Green', 'Jet Black'],
-        sizes: [
-          { size: 'M', stock: 12 },
-          { size: 'L', stock: 15 },
-          { size: 'XL', stock: 8 },
-          { size: 'XXL', stock: 4 }
-        ],
-        totalStock: 39,
-        images: [
-          'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80',
-          'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=900&q=80',
-          'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=900&q=80'
-        ],
-        description: 'Authentic pure export heavyweight tee crafted from luxury 240 GSM 100% compact combed cotton. Double-needle stitch collar, pre-shrunk fabric with subtle vintage enzyme wash finish. Designed for premium durability and relaxed streetwear comfort.',
-        specs: {
-          fabric: '100% Ring-Spun Combed Cotton',
-          gsm: '240 GSM (Dense & Structured)',
-          cut: 'Boxy Drop-Shoulder Relaxed Fit',
-          washCare: 'Machine wash cold, inside out. Tumble dry low.',
-          origin: 'Target Export to Scandinavia / Germany'
-        },
-        featured: true,
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 'prod_2',
-        title: 'Relaxed Vintage Flannel Overshirt',
-        subtitle: 'US Export Surplus • Brushed Yarn-Dyed Cotton Plaid',
-        category: 'Shirts & Flannels',
-        price: 1390,
-        originalPrice: 1850,
-        badge: 'Pure Export',
-        colors: ['Earthy Forest Plaid', 'Charcoal Ombre', 'Camel Tartan'],
-        sizes: [
-          { size: 'S', stock: 6 },
-          { size: 'M', stock: 14 },
-          { size: 'L', stock: 9 },
-          { size: 'XL', stock: 5 }
-        ],
-        totalStock: 34,
-        images: [
-          'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=900&q=80',
-          'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=900&q=80'
-        ],
-        description: 'Crafted for chilly evenings and everyday layer aesthetics. Premium brushed twill fabric with double chest utility pockets and genuine horn buttons. Pure export overstock originally tailored for North American high-street retailers.',
-        specs: {
-          fabric: '100% Brushed Cotton Twill',
-          gsm: '210 GSM',
-          cut: 'Classic Overshirt / Relaxed Layering',
-          washCare: 'Cold hand or machine wash.',
-          origin: 'US High-Street Brand Surplus'
-        },
-        featured: true,
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 'prod_3',
-        title: 'French Terry Hoodie - 380 GSM',
-        subtitle: 'Nordic Export Quality • Brushed Interior, Anti-Pilling',
-        category: 'Hoodies & Jackets',
-        price: 1750,
-        originalPrice: 2400,
-        badge: 'Global Brand',
-        colors: ['Oatmeal Heather', 'Deep Olive', 'Midnight Black'],
-        sizes: [
-          { size: 'M', stock: 8 },
-          { size: 'L', stock: 10 },
-          { size: 'XL', stock: 5 },
-          { size: 'XXL', stock: 2 }
-        ],
-        totalStock: 25,
-        images: [
-          'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=900&q=80',
-          'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=900&q=80'
-        ],
-        description: 'Luxuriously thick 380 GSM fleece with clean minimal finish without garish branding. Double-lined hood, seamless kangaroo pouch, and reinforced ribbed hems that stay snug wash after wash.',
-        specs: {
-          fabric: '85% Cotton, 15% Poly Fleece Anti-Pilling',
-          gsm: '380 GSM Ultra-Heavy',
-          cut: 'Tailored Streetwear Cut',
-          washCare: 'Gentle cycle, dry flat.',
-          origin: 'Northern European Winter Export'
-        },
-        featured: true,
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 'prod_4',
-        title: 'Pleated Linen-Cotton Relaxed Trousers',
-        subtitle: 'Italian Export Tailoring • Breathable Pre-Washed Blend',
-        category: 'Pants & Bottoms',
-        price: 1450,
-        originalPrice: 1950,
-        badge: 'Summer Essential',
-        colors: ['Sand Beige', 'Natural Ecru', 'Slate Grey'],
-        sizes: [
-          { size: '30', stock: 7 },
-          { size: '32', stock: 11 },
-          { size: '34', stock: 9 },
-          { size: '36', stock: 4 }
-        ],
-        totalStock: 31,
-        images: [
-          'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=900&q=80',
-          'https://images.unsplash.com/photo-1479064555552-3ef4979f8908?auto=format&fit=crop&w=900&q=80'
-        ],
-        description: 'Effortless Mediterranean resort aesthetics made for Bangladesh climate. Single forward pleat with elasticated waistband and internal drawstring for supreme all-day comfort.',
-        specs: {
-          fabric: '55% French Linen, 45% Combed Cotton',
-          gsm: '180 GSM Lightweight Twill',
-          cut: 'Relaxed Tapered Fit',
-          washCare: 'Machine wash cold.',
-          origin: 'Southern Europe Summer Export'
-        },
-        featured: true,
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 'prod_5',
-        title: 'Structured Harrington Jacket',
-        subtitle: 'UK Export • Water-Resistant Cotton Shell',
-        category: 'Hoodies & Jackets',
-        price: 2190,
-        originalPrice: 2950,
-        badge: 'Global Brand',
-        colors: ['Matte Black', 'Khaki Stone'],
-        sizes: [
-          { size: 'M', stock: 5 },
-          { size: 'L', stock: 7 },
-          { size: 'XL', stock: 3 }
-        ],
-        totalStock: 15,
-        images: [
-          'https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=900&q=80',
-          'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=900&q=80'
-        ],
-        description: 'Classic British Harrington silhouette with stand-up dual-button collar, YKK antique brass dual zipper, and tartan lining. Timeless and versatile for meetings or casual evenings.',
-        specs: {
-          fabric: '100% Water-Resistant Peached Cotton Shell',
-          gsm: '260 GSM',
-          cut: 'Regular Smart-Casual Fit',
-          washCare: 'Dry clean or cold sponge wipe.',
-          origin: 'British Heritage Brand Surplus'
-        },
-        featured: false,
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 'prod_6',
-        title: 'Washed Mercerized Cotton Pique Polo',
-        subtitle: 'Japanese Export Line • Mother of Pearl Buttons',
-        category: 'T-Shirts & Tops',
-        price: 1050,
-        originalPrice: 1500,
-        badge: 'Export Bestseller',
-        colors: ['Navy Blue', 'Off-White', 'Muted Sage'],
-        sizes: [
-          { size: 'M', stock: 10 },
-          { size: 'L', stock: 12 },
-          { size: 'XL', stock: 6 }
-        ],
-        totalStock: 28,
-        images: [
-          'https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=900&q=80',
-          'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80'
-        ],
-        description: 'Silky smooth mercerized cotton pique with zero collar curl. Subtle contrast ribbing on cuffs with genuine mother-of-pearl buttons. Cool and breathable for all seasons.',
-        specs: {
-          fabric: '100% Double Mercerized Combed Cotton',
-          gsm: '220 GSM Pique',
-          cut: 'Modern Athletic Fit',
-          washCare: 'Machine wash 30°C.',
-          origin: 'Tokyo Department Store Export Line'
-        },
-        featured: false,
-        createdAt: new Date().toISOString()
-      }
-    ];
-    writeData(productsFile, defaultProducts);
+    writeData(productsFile, []);
   }
 
   // 4. Promo codes
@@ -288,7 +246,7 @@ function initializeDB() {
         value: 10,
         minOrder: 800,
         maxUses: 500,
-        currentUses: 14,
+        currentUses: 0,
         description: '10% discount on pure export collection',
         active: true,
         expiryDate: '2026-12-31'
@@ -300,20 +258,8 @@ function initializeDB() {
         value: 50,
         minOrder: 500,
         maxUses: 1000,
-        currentUses: 32,
+        currentUses: 0,
         description: '৳50 off for first-time shoppers',
-        active: true,
-        expiryDate: '2026-12-31'
-      },
-      {
-        id: 'promo_3',
-        code: 'EIDVIP',
-        type: 'percent',
-        value: 15,
-        minOrder: 2000,
-        maxUses: 200,
-        currentUses: 5,
-        description: '15% off on VIP orders over ৳2000',
         active: true,
         expiryDate: '2026-12-31'
       }
@@ -342,26 +288,7 @@ function initializeDB() {
   // 8. Traffic & Device Tracking data
   const trafficFile = 'traffic.json';
   if (!fs.existsSync(getFilePath(trafficFile))) {
-    // Generate some realistic past 7 days traffic with iOS, Android, and PC
-    const visits = [];
-    const devices = ['Mobile iOS', 'Mobile Android', 'Desktop', 'Tablet'];
-    const now = Date.now();
-    for (let i = 0; i < 48; i++) {
-      const timeOffset = Math.floor(Math.random() * 7 * 86400000);
-      const d = new Date(now - timeOffset);
-      const randDev = devices[Math.floor(Math.random() * devices.length)];
-      visits.push({
-        id: `tr_${i + 1}`,
-        timestamp: d.toISOString(),
-        date: d.toISOString().split('T')[0],
-        hour: d.getHours(),
-        device: randDev,
-        ip: `103.114.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
-        path: Math.random() > 0.4 ? '/' : '/product/prod_1',
-        platform: randDev.includes('iOS') ? 'iPhone' : (randDev.includes('Android') ? 'Android' : 'Windows/Mac')
-      });
-    }
-    writeData(trafficFile, visits);
+    writeData(trafficFile, []);
   }
 }
 
@@ -369,5 +296,8 @@ initializeDB();
 
 module.exports = {
   readData,
-  writeData
+  writeData,
+  connectDB,
+  syncFromMongo,
+  isMongoConnected: () => isMongoConnected
 };

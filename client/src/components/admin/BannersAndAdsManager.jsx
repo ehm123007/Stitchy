@@ -4,6 +4,7 @@ import {
   ExternalLink, Image as ImageIcon, Layout, Tag, MoveUp, MoveDown
 } from 'lucide-react';
 import { updateSettings, uploadProductImage } from '../../services/api';
+import { compressImageToBase64 } from '../../utils/imageCompressor';
 
 export default function BannersAndAdsManager({ token, settings, onSettingsUpdated }) {
   const [formData, setFormData] = useState({
@@ -68,10 +69,15 @@ export default function BannersAndAdsManager({ token, settings, onSettingsUpdate
     if (!file) return;
     setUploadingCover(true);
     try {
-      const res = await uploadProductImage(file, token);
-      setFormData((prev) => ({ ...prev, coverUrl: res.url }));
+      const base64 = await compressImageToBase64(file, 1600, 1000, 0.82);
+      setFormData((prev) => ({ ...prev, coverUrl: base64 }));
     } catch (err) {
-      alert('Failed to upload cover picture');
+      try {
+        const res = await uploadProductImage(file, token);
+        setFormData((prev) => ({ ...prev, coverUrl: res.url }));
+      } catch (uploadErr) {
+        alert('Failed to upload cover picture: ' + uploadErr.message);
+      }
     } finally {
       setUploadingCover(false);
     }
@@ -82,10 +88,15 @@ export default function BannersAndAdsManager({ token, settings, onSettingsUpdate
     if (!file) return;
     setUploadingAdImg(true);
     try {
-      const res = await uploadProductImage(file, token);
-      setNewAd((prev) => ({ ...prev, imageUrl: res.url }));
+      const base64 = await compressImageToBase64(file, 1200, 1200, 0.82);
+      setNewAd((prev) => ({ ...prev, imageUrl: base64 }));
     } catch (err) {
-      alert('Failed to upload ad image');
+      try {
+        const res = await uploadProductImage(file, token);
+        setNewAd((prev) => ({ ...prev, imageUrl: res.url }));
+      } catch (uploadErr) {
+        alert('Failed to upload ad image: ' + uploadErr.message);
+      }
     } finally {
       setUploadingAdImg(false);
     }

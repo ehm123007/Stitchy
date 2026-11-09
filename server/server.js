@@ -6,7 +6,7 @@ const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const { readData, writeData } = require('./db');
+const { readData, writeData, connectDB, isMongoConnected } = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,8 +14,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'stitchy-super-secret-key-2026';
 
 // Middlewares
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Static files for uploads & client build
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -1198,6 +1198,69 @@ app.get('/api/analytics', authenticateToken, (req, res) => {
   });
 });
 
+// ==================== SYSTEM STATUS & BACKUP ====================
+app.get('/api/system/status', (req, res) => {
+  res.json({
+    mongoConnected: isMongoConnected(),
+    storageMode: isMongoConnected() ? 'mongodb_atlas' : 'ephemeral_disk',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Full Store Backup Export (Products, Settings, Promos, Orders, Customers)
+app.get('/api/backup/export', authenticateToken, (req, res) => {
+  try {
+    const backup = {
+      stitchyBackupVersion: '2.0',
+      exportedAt: new Date().toISOString(),
+      storeName: 'STITCHY',
+      products: readData('products.json', []),
+      settings: readData('settings.json', {}),
+      promoCodes: readData('promo_codes.json', []),
+      orders: readData('orders.json', []),
+      customers: readData('customers.json', [])
+    };
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename=stitchy_store_backup_${Date.now()}.json`);
+    res.json(backup);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to generate store backup: ' + err.message });
+  }
+});
+
+// Full Store Backup Restore
+app.post('/api/backup/import', authenticateToken, (req, res) => {
+  try {
+    const backup = req.body;
+    if (!backup || typeof backup !== 'object') {
+      return res.status(400).json({ error: 'Invalid backup file format.' });
+    }
+    let restoredCount = 0;
+    if (Array.isArray(backup.products)) {
+      writeData('products.json', backup.products);
+      restoredCount += backup.products.length;
+    }
+    if (backup.settings && typeof backup.settings === 'object') {
+      writeData('settings.json', backup.settings);
+    }
+    if (Array.isArray(backup.promoCodes)) {
+      writeData('promo_codes.json', backup.promoCodes);
+    }
+    if (Array.isArray(backup.orders)) {
+      writeData('orders.json', backup.orders);
+    }
+    if (Array.isArray(backup.customers)) {
+      writeData('customers.json', backup.customers);
+    }
+    res.json({
+      success: true,
+      message: `Store backup restored successfully! (${restoredCount} products, settings, and orders updated)`
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to restore store backup: ' + err.message });
+  }
+});
+
 // Health check for Render / Cloud monitors
 app.get('/health', (req, res) => {
   res.status(200).send('STITCHY OK');
@@ -1217,6 +1280,7 @@ if (fs.existsSync(clientDist)) {
 }
 
 // Start Server
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, '0.0.0.0', async () => {
   console.log(`STITCHY Apparel Server listening on port ${PORT}`);
+  await connectDB();
 });
