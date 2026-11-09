@@ -760,7 +760,7 @@ app.post('/api/orders', uploadReceipt.single('paymentProof'), (req, res) => {
       const senderEmail = settings.gmailUser || 'stitchy123007@gmail.com';
       if (settings.gmailAppPassword) {
         try {
-          const transporter = nodemailer.createTransporter({
+          const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
               user: senderEmail,
@@ -973,7 +973,7 @@ app.post('/api/orders/:id/send-email', authenticateToken, async (req, res) => {
 
   if (settings.gmailAppPassword && customerEmail) {
     try {
-      const transporter = nodemailer.createTransporter({
+      const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
           user: senderEmail,
@@ -1020,7 +1020,7 @@ app.post('/api/settings/test-email', authenticateToken, async (req, res) => {
   }
 
   try {
-    const transporter = nodemailer.createTransporter({
+    const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: senderEmail,
