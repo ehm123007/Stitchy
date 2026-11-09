@@ -42,6 +42,8 @@
   "tiktokUrl": "https://www.tiktok.com/@stitchy710?_r=1&_t=ZS-9BEHb2NGgnV",
   "gmailUser": "stitchy123007@gmail.com",
   "gmailAppPassword": "",
+  "resendApiKey": "",
+  "resendFrom": "STITCHY Apparel <onboarding@resend.dev>",
   "googleAdsId": "AW-11598234-STITCHY",
   "googleAdsActive": true,
   "googleAdsBudget": "৳500 / day",

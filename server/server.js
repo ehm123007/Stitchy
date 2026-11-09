@@ -6,6 +6,7 @@ const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const { readData, writeData, connectDB, isMongoConnected } = require('./db');
 
 const app = express();
@@ -532,27 +533,27 @@ async function sendSystemEmail({ to, subject, html }, settings) {
     return { success: true, method: 'Google Apps Script Webhook' };
   }
 
-  // 2. Resend API Key (HTTP Port 443)
-  if (settings.resendApiKey && settings.resendApiKey.trim()) {
-    const fromAddress = settings.resendFrom || `STITCHY Apparel <orders@stitchy.site>`;
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${settings.resendApiKey.trim()}`
-      },
-      body: JSON.stringify({
+  // 2. Resend Cloud API (HTTP Port 443 - completely bypasses Render SMTP firewall)
+  const resendKey = (process.env.RESEND_API_KEY || settings.resendApiKey || '').trim();
+  if (resendKey) {
+    try {
+      const resend = new Resend(resendKey);
+      const fromAddress = settings.resendFrom || 'STITCHY Apparel <onboarding@resend.dev>';
+      const recipients = Array.isArray(to) ? to : [to];
+      const { data, error } = await resend.emails.send({
         from: fromAddress,
-        to: [to],
+        to: recipients,
         subject: subject,
         html: html
-      })
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      throw new Error(data.message || 'Resend API error');
+      });
+      if (error) {
+        throw new Error(error.message);
+      }
+      return { success: true, method: 'Resend Cloud API', id: data?.id };
+    } catch (resendErr) {
+      console.warn('Resend error:', resendErr.message);
+      throw resendErr;
     }
-    return { success: true, method: 'Resend Cloud API' };
   }
 
   // 3. Fallback: Direct Gmail SMTP
