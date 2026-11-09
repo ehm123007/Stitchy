@@ -515,6 +515,71 @@ app.delete('/api/promo/:id', authenticateToken, (req, res) => {
   res.json({ success: true, message: 'Promo code removed' });
 });
 
+// Universal email sender: Google Apps Script Webhook (Port 443) > Resend API (Port 443) > Direct SMTP
+async function sendSystemEmail({ to, subject, html }, settings) {
+  const senderEmail = settings.gmailUser || 'stitchy123007@gmail.com';
+
+  // 1. Google Apps Script Webhook (HTTP Port 443 - 100% bypasses Render firewall)
+  if (settings.emailWebhookUrl && settings.emailWebhookUrl.trim()) {
+    const res = await fetch(settings.emailWebhookUrl.trim(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ to, subject, html })
+    });
+    if (!res.ok) {
+      throw new Error(`Google Webhook HTTP Error: ${res.statusText}`);
+    }
+    return { success: true, method: 'Google Apps Script Webhook' };
+  }
+
+  // 2. Resend API Key (HTTP Port 443)
+  if (settings.resendApiKey && settings.resendApiKey.trim()) {
+    const fromAddress = settings.resendFrom || `STITCHY Apparel <orders@stitchy.site>`;
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${settings.resendApiKey.trim()}`
+      },
+      body: JSON.stringify({
+        from: fromAddress,
+        to: [to],
+        subject: subject,
+        html: html
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(data.message || 'Resend API error');
+    }
+    return { success: true, method: 'Resend Cloud API' };
+  }
+
+  // 3. Fallback: Direct Gmail SMTP
+  if (settings.gmailAppPassword && settings.gmailAppPassword.trim()) {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: senderEmail,
+        pass: settings.gmailAppPassword.replace(/\s+/g, '')
+      },
+      connectionTimeout: 8000,
+      greetingTimeout: 8000,
+      socketTimeout: 8000
+    });
+    await transporter.verify();
+    await transporter.sendMail({
+      from: `"STITCHY Export Apparel" <${senderEmail}>`,
+      to,
+      subject,
+      html
+    });
+    return { success: true, method: 'Gmail SMTP' };
+  }
+
+  throw new Error('No email dispatch method configured. Please add your Google Webhook URL, Resend Key, or Gmail App Password in Admin Settings.');
+}
+
 function generateOrderEmailHtml(order, settings, isVerification = false) {
   const senderEmail = settings.gmailUser || 'stitchy123007@gmail.com';
   const whatsappUrl = settings.whatsappUrl || 'https://api.whatsapp.com/send/?phone=8801875413743';
@@ -757,30 +822,15 @@ app.post('/api/orders', uploadReceipt.single('paymentProof'), (req, res) => {
     // Automatic email dispatch if customer provided email
     if (email && email.trim().includes('@')) {
       const settings = readData('settings.json', {});
-      const senderEmail = settings.gmailUser || 'stitchy123007@gmail.com';
-      if (settings.gmailAppPassword) {
-        try {
-          const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-              user: senderEmail,
-              pass: (settings.gmailAppPassword || '').replace(/\s+/g, '')
-            }
-          });
-          const htmlContent = generateOrderEmailHtml(newOrder, settings, false);
-          transporter.sendMail({
-            from: `"STITCHY Pure Export" <${senderEmail}>`,
-            to: email.trim(),
-            subject: `Order Received: #${referenceNo} - STITCHY Pure Export`,
-            html: htmlContent
-          }).then(() => {
-            newOrder.emailSent = true;
-            writeData('orders.json', orders);
-          }).catch(err => console.error('Auto order email error:', err));
-        } catch (err) {
-          console.error('Nodemailer init error on checkout:', err);
-        }
-      }
+      const htmlContent = generateOrderEmailHtml(newOrder, settings, false);
+      sendSystemEmail({
+        to: email.trim(),
+        subject: `Order Received: #${referenceNo} - STITCHY Pure Export`,
+        html: htmlContent
+      }, settings).then(() => {
+        newOrder.emailSent = true;
+        writeData('orders.json', orders);
+      }).catch(err => console.error('Auto order email error:', err.message));
     }
 
     res.status(201).json({
@@ -971,25 +1021,16 @@ app.post('/api/orders/:id/send-email', authenticateToken, async (req, res) => {
   let sentViaGmail = false;
   let gmailError = null;
 
-  if (settings.gmailAppPassword && customerEmail) {
+  if (customerEmail) {
     try {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: senderEmail,
-          pass: (settings.gmailAppPassword || '').replace(/\s+/g, '')
-        }
-      });
-
-      await transporter.sendMail({
-        from: `"STITCHY Pure Export" <${senderEmail}>`,
+      const dispatchResult = await sendSystemEmail({
         to: customerEmail,
         subject: `Order Confirmed: #${order.referenceNo} - STITCHY Pure Export`,
         html: emailHtml
-      });
+      }, settings);
       sentViaGmail = true;
     } catch (err) {
-      console.error('Nodemailer Gmail dispatch error:', err);
+      console.error('Order email error:', err.message);
       gmailError = err.message;
     }
   }
@@ -1001,50 +1042,46 @@ app.post('/api/orders/:id/send-email', authenticateToken, async (req, res) => {
     recipient: customerEmail || order.customer.phone,
     message: sentViaGmail 
       ? `Real email successfully dispatched to ${customerEmail} from ${senderEmail}!`
-      : `Email confirmation recorded for ${customerEmail || order.customer.phone}. (To send actual live emails directly from Gmail, add your Gmail App Password in Admin Settings).`,
+      : `Email confirmation recorded for ${customerEmail || order.customer.phone}.`,
     emailPreviewHtml: emailHtml
   });
 });
 
-// Test Gmail SMTP configuration endpoint
+// Test Email configuration endpoint (supports Google Apps Script Webhook, Resend, and Gmail SMTP)
 app.post('/api/settings/test-email', authenticateToken, async (req, res) => {
   const settings = readData('settings.json', {});
   const senderEmail = settings.gmailUser || 'stitchy123007@gmail.com';
-  const appPassword = settings.gmailAppPassword;
-
-  if (!appPassword) {
-    return res.status(400).json({
-      success: false,
-      error: 'Gmail App Password is not configured yet. Please enter your 16-character Google App Password in settings.'
-    });
-  }
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: senderEmail,
-        pass: (appPassword || '').replace(/\s+/g, '')
-      }
-    });
-
-    await transporter.verify();
-    await transporter.sendMail({
-      from: `"STITCHY Export Apparel" <${senderEmail}>`,
+    const dispatchResult = await sendSystemEmail({
       to: senderEmail,
-      subject: '✅ STITCHY Gmail SMTP Integration Verified!',
+      subject: '✅ STITCHY Official Email Integration Verified!',
       html: `
-        <div style="font-family: sans-serif; padding: 20px;">
-          <h2>STITCHY Mail Service is LIVE</h2>
-          <p>Your official email <b>${senderEmail}</b> is now connected to the STITCHY platform.</p>
-          <p>Customer order confirmation receipts and tracking updates will be dispatched automatically.</p>
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 28px; border: 1px solid #E8E5DF; border-radius: 16px; max-width: 500px; background: #FAF8F5;">
+          <h2 style="margin: 0 0 10px 0; color: #111;">STITCHY Email Service Verified</h2>
+          <p style="color: #444; font-size: 14px; line-height: 1.5;">Your official email <b>${senderEmail}</b> is successfully connected to the STITCHY storefront.</p>
+          <div style="background: #fff; padding: 12px; border-radius: 10px; border: 1px solid #E8E5DF; margin: 15px 0;">
+            <span style="font-size: 12px; font-weight: bold; color: #111;">Delivery Channel:</span>
+            <span style="font-size: 12px; color: #0F5132; margin-left: 6px; font-weight: 600;">${dispatchResult.method}</span>
+          </div>
+          <p style="color: #666; font-size: 12px; line-height: 1.5;">Customer checkout receipts, bKash verification confirmations, and tracking links will be automatically delivered.</p>
+          <hr style="border: 0; border-top: 1px solid #E8E5DF; margin: 20px 0;" />
+          <p style="font-size: 11px; color: #999; margin: 0;">STITCHY Apparel • 100% Exported Clothes</p>
         </div>
       `
-    });
+    }, settings);
 
-    res.json({ success: true, message: `Test email successfully sent to ${senderEmail}!` });
+    res.json({
+      success: true,
+      message: `✅ Test email successfully sent to ${senderEmail} via ${dispatchResult.method}!`
+    });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    console.error('Test email error:', err.message);
+    let errMsg = err.message;
+    if (err.message.includes('timeout') || err.code === 'ETIMEDOUT') {
+      errMsg = 'Connection timed out: Render blocks raw outbound SMTP ports (465/587). Please use the 1-minute Google Apps Script Webhook (Port 443) or Resend API key in Settings.';
+    }
+    res.status(500).json({ success: false, error: errMsg });
   }
 });
 

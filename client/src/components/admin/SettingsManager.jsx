@@ -33,6 +33,8 @@ export default function SettingsManager({ token, settings, onSettingsUpdated }) 
     tiktokUrl: settings?.tiktokUrl || 'https://www.tiktok.com/@stitchy710?_r=1&_t=ZS-9BEHb2NGgnV',
     gmailUser: settings?.gmailUser || 'stitchy123007@gmail.com',
     gmailAppPassword: settings?.gmailAppPassword || '',
+    emailWebhookUrl: settings?.emailWebhookUrl || '',
+    resendApiKey: settings?.resendApiKey || '',
     googleDriveFolderUrl: settings?.googleDriveFolderUrl || 'https://drive.google.com/drive/my-drive'
   });
 
@@ -277,69 +279,126 @@ export default function SettingsManager({ token, settings, onSettingsUpdated }) 
 
       <form onSubmit={handleSave} className="space-y-6">
         
-        {/* Official Gmail Sending Card */}
-        <div className="bg-white p-6 rounded-2xl border border-[#E8E5DF] space-y-4 text-xs">
-          <div className="flex items-center justify-between">
-            <h3 className="font-serif-luxury text-base font-bold text-neutral-900 flex items-center gap-2">
-              <Mail size={18} className="text-[#C5A880]" />
-              <span>Official Google Mail (Gmail SMTP Integration)</span>
-            </h3>
+        {/* Official Google Mail / Email Dispatch Card */}
+        <div className="bg-white p-6 rounded-2xl border border-[#E8E5DF] space-y-5 text-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h3 className="font-serif-luxury text-base font-bold text-neutral-900 flex items-center gap-2">
+                <Mail size={18} className="text-[#C5A880]" />
+                <span>Official Email System (Customer Receipts & Tracking)</span>
+              </h3>
+              <p className="text-neutral-500 mt-0.5">
+                Automatically dispatches order confirmations from <b>{formData.supportEmail}</b> to customer inboxes.
+              </p>
+            </div>
 
-            {testResult && (
-              <span className="text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
-                {testResult}
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              {testResult && (
+                <span className="text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+                  {testResult}
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={handleTestEmail}
+                disabled={testingEmail || (!formData.emailWebhookUrl && !formData.resendApiKey && !formData.gmailAppPassword)}
+                className="px-4 py-2 bg-neutral-900 text-white rounded-xl font-bold uppercase tracking-wider hover:bg-neutral-800 disabled:opacity-40 transition-all flex items-center gap-1.5 shadow-sm text-[11px]"
+              >
+                <Send size={13} className="text-[#C5A880]" />
+                <span>{testingEmail ? 'Sending Test...' : 'Test Email Now'}</span>
+              </button>
+            </div>
           </div>
 
-          <p className="text-neutral-600 leading-relaxed">
-            Send order confirmation receipts and shipping updates directly from your official email <b>{formData.supportEmail}</b> to customer inboxes.
-          </p>
+          {/* Option 1 (Primary / Recommended): Free Google Apps Script Webhook */}
+          <div className="p-4 bg-[#FAF8F5] rounded-2xl border border-[#E8E5DF] space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="font-bold text-neutral-900 flex items-center gap-1.5 text-xs">
+                <Sparkles size={14} className="text-[#C5A880]" />
+                <span>Option 1: Free Google Webhook (Recommended for Render Cloud)</span>
+              </div>
+              <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full inline-block">
+                ⚡ 100% Free • Bypasses Cloud Port 465 Restrictions
+              </span>
+            </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <p className="text-neutral-600 text-[11px] leading-relaxed">
+              Cloud hosts like Render block raw email ports (465/587) to prevent spam, causing <i>"Connection timeout"</i>. 
+              A Google Apps Script Webhook runs over standard <b>HTTPS (Port 443)</b> directly inside your Google Account to send real emails from <b>{formData.gmailUser}</b>!
+            </p>
+
             <div>
-              <label className="block font-bold text-neutral-800 uppercase mb-1">Official Sender Gmail</label>
+              <label className="block font-bold text-neutral-800 uppercase text-[10px] mb-1">
+                Google Web App URL (Paste from script.google.com)
+              </label>
               <input
-                type="email"
-                name="gmailUser"
-                value={formData.gmailUser}
+                type="url"
+                name="emailWebhookUrl"
+                value={formData.emailWebhookUrl}
                 onChange={handleInputChange}
-                className="w-full p-2.5 bg-[#FAF8F5] border border-[#D5CEC5] rounded-xl font-mono"
+                placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+                className="w-full p-2.5 bg-white border border-[#D5CEC5] rounded-xl font-mono text-xs"
               />
             </div>
 
-            <div>
-              <label className="block font-bold text-neutral-800 uppercase mb-1">
-                Google 16-Character App Password
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="password"
-                  name="gmailAppPassword"
-                  value={formData.gmailAppPassword}
-                  onChange={handleInputChange}
-                  placeholder="e.g. abcd efgh ijkl mnop"
-                  className="flex-1 p-2.5 bg-[#FAF8F5] border border-[#D5CEC5] rounded-xl font-mono text-xs"
-                />
-                <button
-                  type="button"
-                  onClick={handleTestEmail}
-                  disabled={testingEmail || !formData.gmailAppPassword}
-                  className="px-3.5 py-2 bg-neutral-900 text-white rounded-xl font-bold uppercase hover:bg-neutral-800 disabled:opacity-50 transition-all flex items-center gap-1.5 shrink-0"
-                >
-                  <Send size={12} />
-                  <span>{testingEmail ? 'Testing...' : 'Test Mail'}</span>
-                </button>
+            {/* 1-Minute Setup Guide */}
+            <details className="text-[11px] text-neutral-600 pt-1">
+              <summary className="font-bold text-neutral-800 hover:text-black cursor-pointer">
+                ▶ View 1-minute setup instructions for script.google.com (Click to expand)
+              </summary>
+              <div className="mt-2.5 p-3 bg-white border border-[#E8E5DF] rounded-xl space-y-2">
+                <ol className="list-decimal list-inside space-y-1">
+                  <li>Go to <a href="https://script.google.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold underline">script.google.com</a> signed in with <b>stitchy123007@gmail.com</b>.</li>
+                  <li>Click <b>New project</b>, erase any existing text, and paste this:</li>
+                </ol>
+                <pre className="p-2.5 bg-neutral-900 text-emerald-300 font-mono text-[10px] rounded-lg overflow-x-auto select-all">
+{`function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    MailApp.sendEmail({ to: data.to, subject: data.subject, htmlBody: data.html });
+    return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ error: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+  }
+}`}
+                </pre>
+                <ol start="3" className="list-decimal list-inside space-y-1">
+                  <li>Click <b>Deploy</b> (top right) ➔ <b>New deployment</b>.</li>
+                  <li>Click the Gear icon ➔ Select <b>Web app</b>.</li>
+                  <li>Set <i>Execute as:</i> <b>Me</b> and <i>Who has access:</i> <b>Anyone</b>.</li>
+                  <li>Click <b>Deploy</b>, authorize once, copy the <b>Web app URL</b>, and paste it into the box above!</li>
+                </ol>
               </div>
-            </div>
+            </details>
           </div>
 
-          {/* Quick Guide to Google App Password */}
-          <div className="p-3 bg-[#FAF8F5] rounded-xl border border-[#E8E5DF] text-[11px] text-neutral-600 space-y-1">
-            <span className="font-bold text-neutral-800">📌 How to generate your 16-character Google App Password:</span>
-            <p>1. Go to your Google Account at <b>myaccount.google.com</b> with <b>stitchy123007@gmail.com</b>.</p>
-            <p>2. Click <b>Security</b> → Enable <b>2-Step Verification</b>.</p>
-            <p>3. Search for <b>"App passwords"</b> in Google settings, generate a password for "Mail / Other", and paste the 16 characters here!</p>
+          {/* Options 2 & 3 */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+            <div className="p-3.5 bg-[#FAF8F5] rounded-xl border border-[#E8E5DF] space-y-2">
+              <span className="font-bold text-neutral-900 block text-[11px]">Option 2: Resend API Key (Cloud HTTPS)</span>
+              <p className="text-[10px] text-neutral-500">Free transactional email API (3,000 emails/month free at resend.com).</p>
+              <input
+                type="password"
+                name="resendApiKey"
+                value={formData.resendApiKey}
+                onChange={handleInputChange}
+                placeholder="re_123456789..."
+                className="w-full p-2 bg-white border border-[#D5CEC5] rounded-lg font-mono text-xs"
+              />
+            </div>
+
+            <div className="p-3.5 bg-[#FAF8F5] rounded-xl border border-[#E8E5DF] space-y-2">
+              <span className="font-bold text-neutral-900 block text-[11px]">Option 3: Direct Gmail App Password (SMTP)</span>
+              <p className="text-[10px] text-neutral-500">Works on local machines or cloud hosts where SMTP port 465 is unblocked.</p>
+              <input
+                type="password"
+                name="gmailAppPassword"
+                value={formData.gmailAppPassword}
+                onChange={handleInputChange}
+                placeholder="16-character app password"
+                className="w-full p-2 bg-white border border-[#D5CEC5] rounded-lg font-mono text-xs"
+              />
+            </div>
           </div>
         </div>
 
