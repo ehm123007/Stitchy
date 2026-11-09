@@ -764,7 +764,7 @@ app.post('/api/orders', uploadReceipt.single('paymentProof'), (req, res) => {
             service: 'gmail',
             auth: {
               user: senderEmail,
-              pass: settings.gmailAppPassword.trim()
+              pass: (settings.gmailAppPassword || '').replace(/\s+/g, '')
             }
           });
           const htmlContent = generateOrderEmailHtml(newOrder, settings, false);
@@ -977,7 +977,7 @@ app.post('/api/orders/:id/send-email', authenticateToken, async (req, res) => {
         service: 'gmail',
         auth: {
           user: senderEmail,
-          pass: settings.gmailAppPassword.trim()
+          pass: (settings.gmailAppPassword || '').replace(/\s+/g, '')
         }
       });
 
@@ -1024,7 +1024,7 @@ app.post('/api/settings/test-email', authenticateToken, async (req, res) => {
       service: 'gmail',
       auth: {
         user: senderEmail,
-        pass: appPassword.trim()
+        pass: (appPassword || '').replace(/\s+/g, '')
       }
     });
 
