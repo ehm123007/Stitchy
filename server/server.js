@@ -1054,6 +1054,7 @@ app.post('/api/settings/test-email', authenticateToken, async (req, res) => {
   const senderEmail = settings.gmailUser || 'stitchy123007@gmail.com';
 
   try {
+    const testMethod = (settings.resendApiKey || process.env.RESEND_API_KEY) ? 'Resend Cloud API' : (settings.emailWebhookUrl ? 'Google Webhook' : 'Gmail SMTP');
     const dispatchResult = await sendSystemEmail({
       to: senderEmail,
       subject: '✅ STITCHY Official Email Integration Verified!',
@@ -1063,7 +1064,7 @@ app.post('/api/settings/test-email', authenticateToken, async (req, res) => {
           <p style="color: #444; font-size: 14px; line-height: 1.5;">Your official email <b>${senderEmail}</b> is successfully connected to the STITCHY storefront.</p>
           <div style="background: #fff; padding: 12px; border-radius: 10px; border: 1px solid #E8E5DF; margin: 15px 0;">
             <span style="font-size: 12px; font-weight: bold; color: #111;">Delivery Channel:</span>
-            <span style="font-size: 12px; color: #0F5132; margin-left: 6px; font-weight: 600;">${dispatchResult.method}</span>
+            <span style="font-size: 12px; color: #0F5132; margin-left: 6px; font-weight: 600;">${testMethod}</span>
           </div>
           <p style="color: #666; font-size: 12px; line-height: 1.5;">Customer checkout receipts, bKash verification confirmations, and tracking links will be automatically delivered.</p>
           <hr style="border: 0; border-top: 1px solid #E8E5DF; margin: 20px 0;" />
