@@ -651,6 +651,12 @@ app.post('/api/orders', uploadReceipt.single('paymentProof'), (req, res) => {
       return res.status(400).json({ error: 'Name, phone number, address and delivery zone are required.' });
     }
 
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!cleanEmail || !emailRegex.test(cleanEmail)) {
+      return res.status(400).json({ error: 'A valid email address is mandatory so you can receive your invoice and log in to track your order.' });
+    }
+
     const cleanPhone = phone.replace(/[^0-9]/g, '');
     if (cleanPhone.length < 11) {
       return res.status(400).json({ error: 'A valid active 11-digit mobile number is mandatory for courier dispatch and delivery calls.' });
@@ -753,7 +759,7 @@ app.post('/api/orders', uploadReceipt.single('paymentProof'), (req, res) => {
       customer: {
         name: name.trim(),
         phone: phone.trim(),
-        email: (email || '').trim(),
+        email: cleanEmail,
         address: address.trim(),
         landmark: (landmark || '').trim(),
         postalCode: (postalCode || '').trim(),
@@ -810,7 +816,7 @@ app.post('/api/orders', uploadReceipt.single('paymentProof'), (req, res) => {
         id: `cust_${Date.now()}`,
         name: name.trim(),
         phone: phone.trim(),
-        email: (email || '').trim(),
+        email: cleanEmail,
         city: city || (deliveryZone === 'inside' ? 'Dhaka' : 'Outside Dhaka'),
         address: address.trim(),
         totalOrders: 1,
@@ -1121,10 +1127,17 @@ app.get('/api/customer/orders', (req, res) => {
   const { email, phone } = req.query;
   if (!email && !phone) return res.status(400).json({ error: 'Email or phone required' });
 
+  const targetEmail = (email || '').trim().toLowerCase();
+  const targetPhone = (phone || '').replace(/[^0-9]/g, '');
+
   const orders = readData('orders.json', []);
   const matching = orders.filter(o => {
-    const emailMatch = email && o.customer?.email && o.customer.email.toLowerCase() === email.toLowerCase();
-    const phoneMatch = phone && o.customer?.phone && o.customer.phone.replace(/[^0-9]/g, '').endsWith(phone.replace(/[^0-9]/g, '').slice(-10));
+    const orderEmail = (o.customer?.email || '').trim().toLowerCase();
+    const emailMatch = targetEmail && orderEmail && orderEmail === targetEmail;
+
+    const orderPhone = (o.customer?.phone || '').replace(/[^0-9]/g, '');
+    const phoneMatch = targetPhone && orderPhone && orderPhone.endsWith(targetPhone.slice(-10));
+
     return emailMatch || phoneMatch;
   });
 

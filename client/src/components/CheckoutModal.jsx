@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, Check, ShieldCheck, Upload, QrCode, Copy, CheckCircle2, 
   MapPin, Phone, Mail, User, Building, AlertCircle, ArrowLeft, Loader2, Info
@@ -11,15 +11,16 @@ export default function CheckoutModal({
   cartItems,
   appliedPromo,
   settings,
+  customerUser,
   onOrderSuccess
 }) {
   if (!isOpen) return null;
 
   // Form states
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
+    name: customerUser?.name || '',
+    phone: customerUser?.phone || '',
+    email: customerUser?.email || '',
     address: '',
     landmark: '',
     city: 'Dhaka',
@@ -28,6 +29,18 @@ export default function CheckoutModal({
     paymentMethod: 'cod_advance', // 'cod_advance' or 'bangla_qr_full'
     transactionId: ''
   });
+
+  // Keep form synced if user is already logged in
+  useEffect(() => {
+    if (customerUser) {
+      setFormData(prev => ({
+        ...prev,
+        name: prev.name || customerUser.name || '',
+        email: prev.email || customerUser.email || '',
+        phone: prev.phone || customerUser.phone || ''
+      }));
+    }
+  }, [customerUser, isOpen]);
 
   const [paymentProofFile, setPaymentProofFile] = useState(null);
   const [proofPreviewUrl, setProofPreviewUrl] = useState('');
@@ -98,6 +111,12 @@ export default function CheckoutModal({
     const cleanPhone = formData.phone.trim().replace(/[^0-9]/g, '');
     if (!cleanPhone || cleanPhone.length < 11) {
       setErrorMsg('A valid active 11-digit mobile phone number is required (e.g. 017XXXXXXXX) for delivery calls');
+      return;
+    }
+    const cleanEmail = (formData.email || '').trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!cleanEmail || !emailRegex.test(cleanEmail)) {
+      setErrorMsg('A valid email address is required (e.g. yourname@gmail.com). This is required to receive your invoice and log in to track your orders.');
       return;
     }
     if (!formData.address.trim()) {
@@ -225,19 +244,22 @@ export default function CheckoutModal({
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-1">
-                      Gmail / Email Address (Recommended for Instant Receipt & Order Tracking)
+                    <label className="block text-xs font-bold text-neutral-800 uppercase tracking-wider mb-1 flex items-center justify-between">
+                      <span>Email Address <span className="text-red-500 font-bold">*</span></span>
+                      <span className="text-[10px] text-[#C5A880] font-semibold normal-case">Mandatory for Invoice & Order Tracking</span>
                     </label>
                     <input
                       type="email"
                       name="email"
+                      required
                       value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="yourname@gmail.com (receipt will be mailed & orders synced)"
-                      className="w-full text-xs px-3.5 py-2.5 bg-[#FAF8F5] border border-[#D5CEC5] rounded-xl focus:outline-none focus:border-neutral-900"
+                      placeholder="e.g. yourname@gmail.com"
+                      className="w-full text-xs px-3.5 py-2.5 bg-[#FAF8F5] border border-[#D5CEC5] rounded-xl focus:outline-none focus:border-neutral-900 font-mono"
                     />
-                    <span className="text-[10px] text-neutral-400 mt-1 block">
-                      💡 Entering your Gmail sends you an instant confirmation receipt and allows 1-click order tracking.
+                    <span className="text-[10px] text-neutral-500 mt-1.5 flex items-start gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 mt-1"></span>
+                      <span><b>Why mandatory:</b> You will receive your official invoice here, and you can log in anytime with this email to view all your order details and delivery updates.</span>
                     </span>
                   </div>
                 </div>

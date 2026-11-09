@@ -150,6 +150,23 @@ export default function App() {
     setCart([]);
     setAppliedPromo(null);
     setCompletedOrder(order);
+
+    // Auto-create/restore customer session so they immediately see their order in their account!
+    if (order.customer?.email) {
+      const email = order.customer.email.toLowerCase().trim();
+      const customerSession = {
+        id: `cust_${Date.now()}`,
+        email,
+        name: order.customer.name || email.split('@')[0],
+        picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(order.customer.name || email)}&background=121212&color=C5A880`,
+        createdAt: new Date().toISOString()
+      };
+      setCustomerUser(customerSession);
+      try {
+        localStorage.setItem('stitchy_customer_user', JSON.stringify(customerSession));
+      } catch (e) {}
+    }
+
     // Reload products to reflect deducted stock
     getProducts().then(setProducts).catch(console.error);
   };
@@ -442,6 +459,7 @@ export default function App() {
         cartItems={cart}
         appliedPromo={appliedPromo}
         settings={settings}
+        customerUser={customerUser}
         onOrderSuccess={handleOrderSuccess}
       />
 
